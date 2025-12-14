@@ -42,7 +42,7 @@ export default function Header() {
         <div className="flex items-center gap-1 cursor-pointer">
           {/* Text Logo based on image */}
           <Image src="/logo.svg" alt="Edison Logo" width={150} height={50} />
-          <div className="w-3 h-3 bg-[#4854F6] rounded-full mb-4 -ml-1"></div>{" "}
+          {/* <div className="w-3 h-3 bg-[#4854F6] rounded-full mb-4 -ml-1"></div>{" "} */}
           {/* The blue dot accent */}
         </div>
 
@@ -65,16 +65,16 @@ export default function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          <button className="hidden lg:block font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest text-sm transition-colors">
+          <a href="/sign-in"  className="hidden lg:block text-center font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest text-sm transition-colors">
             I have an account
-          </button>
-          <button className="btn-primary px-6 py-2.5 rounded-2xl font-bold uppercase tracking-widest text-sm shadow-md">
+          </a>
+          <a href="/sign-up"  className="btn-primary px-6 py-2.5 rounded-2xl text-center font-bold uppercase tracking-widest text-sm shadow-md">
             Get Started
-          </button>
+          </a>
         </div>
 
         <button
-          className="md:hidden text-gray-500"
+          className="md:hidden text-gray-500 border border-gray-300 p-2 rounded-lg transition"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
@@ -96,12 +96,12 @@ export default function Header() {
           >
             Features
           </a>
-          <button className="btn-primary w-full py-3 rounded-xl font-bold uppercase">
+          <a href="/sign-up" className="btn-primary w-full py-3  text-center rounded-xl font-bold uppercase">
             Get Started
-          </button>
-          <button className="btn-outline w-full py-3 rounded-xl font-bold uppercase">
+          </a>
+          <a href="/sign-in" className="btn-outline w-full py-3 text-center rounded-xl font-bold uppercase">
             Log In
-          </button>
+          </a>
         </div>
       )}
     </header>
