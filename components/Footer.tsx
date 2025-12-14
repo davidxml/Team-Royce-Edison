@@ -1,102 +1,115 @@
 "use client";
 
-import Link from "next/link";
-import { Brain } from "lucide-react";
+import Image from "next/image";
+
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="col-span-1 md:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-linear-to-br from-[#6c47ff] to-[#8b5cf6] rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-white">Edison</span>
-            </Link>
-            <p className="text-sm text-gray-400 max-w-md">
-              AI-powered one-on-one tutoring aligned to Nigerian curricula.
-              Personalized learning that adapts to your pace and style.
-            </p>
+    <footer className="bg-[#4854F6] text-indigo-100 py-16">
+      <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        <div className="col-span-2 lg:col-span-2">
+          <div className="flex items-center gap-2 mb-6">
+           
+           <Image src="/logo-white.svg" width={120} height={50} alt="logo"/>
           </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/dashboard"
-                  className="hover:text-white transition-colors"
-                >
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/lessons"
-                  className="hover:text-white transition-colors"
-                >
-                  Lessons
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/profile"
-                  className="hover:text-white transition-colors"
-                >
-                  Profile
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="#" className="hover:text-white transition-colors">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-white transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <p className="font-semibold opacity-80 max-w-xs">
+            Democratizing access to high-quality education for every Nigerian
+            student.
+          </p>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-gray-400">
-            © {new Date().getFullYear()} Edison. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6 text-sm">
-            <Link href="#" className="hover:text-white transition-colors">
-              Twitter
-            </Link>
-            <Link href="#" className="hover:text-white transition-colors">
-              LinkedIn
-            </Link>
-            <Link href="#" className="hover:text-white transition-colors">
-              Facebook
-            </Link>
-          </div>
+        <div className="flex flex-col gap-4">
+          <h4 className="font-extrabold text-white text-lg">About us</h4>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Courses
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Mission
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Team
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Contact
+          </a>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h4 className="font-extrabold text-white text-lg">Product</h4>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Edison for Schools
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            JAMB Prep
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            WAEC Past Questions
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Super Edison
+          </a>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <h4 className="font-extrabold text-white text-lg">Support</h4>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Help Center
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Terms
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Privacy
+          </a>
+          <a
+            href="#"
+            className="font-semibold hover:text-white transition-colors"
+          >
+            Community Guidelines
+          </a>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-indigo-400/50 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p className="font-bold opacity-70">© 2025 Edison Ltd.</p>
+        <div className="flex gap-4">
+          {/* Social placeholders */}
+          <div className="w-8 h-8 bg-black/10 rounded-full hover:bg-black/20 cursor-pointer"></div>
+          <div className="w-8 h-8 bg-black/10 rounded-full hover:bg-black/20 cursor-pointer"></div>
+          <div className="w-8 h-8 bg-black/10 rounded-full hover:bg-black/20 cursor-pointer"></div>
         </div>
       </div>
     </footer>

@@ -14,7 +14,7 @@ const bricolage = Bricolage_Grotesque({
 export const metadata: Metadata = {
   title: "Edison — AI Tutoring for Nigerian Students",
   description:
-    "Edison delivers affordable, AI-driven one-on-one tutoring aligned to Nigerian curricula — personalized learning, low-bandwidth support, and teacher tools.",
+    "Edison delivers affordable, AI-driven one-on-one tutoring aligned to Nigerian curricula.",
 };
 
 export default function RootLayout({
@@ -23,8 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <ClerkProvider
+      appearance={{
+        variables: { colorPrimary: "#4854F6" },
+      }}
+    >
+      <html lang="en" style={{ scrollBehavior: "smooth" }}>
         <body
           className={`${bricolage.variable} antialiased flex flex-col min-h-screen`}
         >
