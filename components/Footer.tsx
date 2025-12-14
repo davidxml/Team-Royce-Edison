@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { Brain } from "lucide-react";
+import Image from "next/image";
+
 
 export default function Footer() {
   return (
@@ -9,10 +9,8 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
         <div className="col-span-2 lg:col-span-2">
           <div className="flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-[#4854F6] font-bold">
-              E
-            </div>
-            <span className="text-2xl font-extrabold text-white">Edison</span>
+           
+           <Image src="/logo-white.svg" width={120} height={50} alt="logo"/>
           </div>
           <p className="font-semibold opacity-80 max-w-xs">
             Democratizing access to high-quality education for every Nigerian
