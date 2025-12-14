@@ -1,15 +1,11 @@
 "use client";
 
-
-import { 
-  Menu, 
-  X, 
-} from 'lucide-react';
+import { Menu, X } from "lucide-react";
 
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   SignedIn,
   SignedOut,
@@ -20,17 +16,17 @@ import {
 import { Brain } from "lucide-react";
 
 export default function Header() {
- const [isScrolled, setIsScrolled] = useState(false);
- const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
- // Handle scroll for sticky navbar shadow
- useEffect(() => {
-   const handleScroll = () => {
-     setIsScrolled(window.scrollY > 20);
-   };
-   window.addEventListener("scroll", handleScroll);
-   return () => window.removeEventListener("scroll", handleScroll);
- }, []);
+  // Handle scroll for sticky navbar shadow
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <header
@@ -41,7 +37,9 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <div className="flex items-center gap-1 cursor-pointer">
           {/* Text Logo based on image */}
-          <Image src="/logo.svg" alt="Edison Logo" width={150} height={50} />
+          <a href="/">
+            <Image src="/logo.svg" alt="Edison Logo" width={150} height={50} />
+          </a>
           {/* <div className="w-3 h-3 bg-[#4854F6] rounded-full mb-4 -ml-1"></div>{" "} */}
           {/* The blue dot accent */}
         </div>
@@ -65,10 +63,16 @@ export default function Header() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
-          <a href="/sign-in"  className="hidden lg:block text-center font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest text-sm transition-colors">
+          <a
+            href="/sign-in"
+            className="hidden lg:block text-center font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest text-sm transition-colors"
+          >
             I have an account
           </a>
-          <a href="/sign-up"  className="btn-primary px-6 py-2.5 rounded-2xl text-center font-bold uppercase tracking-widest text-sm shadow-md">
+          <a
+            href="/sign-in"
+            className="btn-primary px-6 py-2.5 rounded-2xl text-center font-bold uppercase tracking-widest text-sm shadow-md"
+          >
             Get Started
           </a>
         </div>
@@ -96,10 +100,16 @@ export default function Header() {
           >
             Features
           </a>
-          <a href="/sign-up" className="btn-primary w-full py-3  text-center rounded-xl font-bold uppercase">
+          <a
+            href="/sign-in"
+            className="btn-primary w-full py-3  text-center rounded-xl font-bold uppercase"
+          >
             Get Started
           </a>
-          <a href="/sign-in" className="btn-outline w-full py-3 text-center rounded-xl font-bold uppercase">
+          <a
+            href="/sign-in"
+            className="btn-outline w-full py-3 text-center rounded-xl font-bold uppercase"
+          >
             Log In
           </a>
         </div>

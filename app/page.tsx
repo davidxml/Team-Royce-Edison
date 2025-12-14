@@ -1,25 +1,23 @@
-"use client"
+"use client";
 
 import Image from "next/image";
-import React, { useState, useEffect } from 'react';
-import { 
-  BookOpen, 
-  Brain, 
-  MessageCircle, 
-  Zap, 
-  Trophy, 
-  Target, 
-  Globe, 
-  Menu, 
-  X, 
-  ChevronRight, 
+import React, { useState, useEffect } from "react";
+import {
+  BookOpen,
+  Brain,
+  MessageCircle,
+  Zap,
+  Trophy,
+  Target,
+  Globe,
+  Menu,
+  X,
+  ChevronRight,
   Star,
-  Check
-} from 'lucide-react';
+  Check,
+} from "lucide-react";
 
 const LandingPage = () => {
- 
-
   return (
     <div className="font-sans text-gray-800 antialiased bg-white selection:bg-indigo-100 selection:text-indigo-800">
       {/* Google Font Import (Nunito matches Duolingo's roundness) */}
@@ -86,20 +84,22 @@ const LandingPage = () => {
         }
       `}</style>
 
-     
       <main className="pt-20">
         {/* Hero Section */}
         <section className="min-h-[90vh] flex items-center justify-center relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
           <div className="max-w-6xl mx-auto px-4 flex flex-col lg:flex-row items-center gap-12 lg:gap-24 py-12">
-            
             {/* Hero Image / Animation Placeholder */}
             <div className="w-full lg:w-1/2 flex justify-center relative">
               <div className="relative w-80 h-80 lg:w-[500px] lg:h-[500px]">
                 {/* Central Globe/Mascot */}
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#4854F6] rounded-full flex items-center justify-center z-10 shadow-[0_8px_0_#353EB5] animate-float">
-                  <BookOpen size={100} className="text-white" strokeWidth={2.5} />
+                  <BookOpen
+                    size={100}
+                    className="text-white"
+                    strokeWidth={2.5}
+                  />
                 </div>
-                
+
                 {/* Orbiting Elements */}
                 <div className="absolute top-0 right-10 bg-yellow-400 p-4 rounded-2xl shadow-[0_4px_0_#b45309] animate-float-delayed z-20">
                   <Brain size={40} className="text-white" />
@@ -116,17 +116,25 @@ const LandingPage = () => {
             {/* Hero Text */}
             <div className="w-full lg:w-1/2 text-center lg:text-left space-y-8">
               <h1 className="text-4xl lg:text-6xl font-extrabold text-gray-800 leading-tight">
-                The fun, and effective way to learn & ace the  <span className="text-[#4854F6]">NERDC syllabus</span>.
+                The fun, and effective way to learn & ace the{" "}
+                <span className="text-[#4854F6]">NERDC syllabus</span>.
               </h1>
               <p className="text-lg lg:text-xl text-gray-500 font-medium">
-                From Grade 1 to Grade 12. Prepare for WAEC, NECO, and JAMB with personalized AI tutors and gamified lessons.
+                From Grade 1 to Grade 12. Prepare for WAEC, NECO, and JAMB with
+                personalized AI tutors and gamified lessons.
               </p>
-              
+
               <div className="flex flex-col gap-4 max-w-sm mx-auto lg:mx-0">
-                <a href="/sign-in" className="btn-primary w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-lg">
+                <a
+                  href="/sign-in"
+                  className="btn-primary w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-lg"
+                >
                   Get Started
                 </a>
-                <a href="/sign-up" className="btn-outline w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-sm">
+                <a
+                  href="/sign-in"
+                  className="btn-outline w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-sm"
+                >
                   I already have an account
                 </a>
               </div>
@@ -141,9 +149,16 @@ const LandingPage = () => {
               Covering the complete Nigerian Curriculum
             </p>
             <div className="flex flex-wrap justify-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-              {['Primary', 'JSS 1-3', 'SSS 1-3', 'WAEC', 'NECO', 'JAMB'].map((level) => (
-                <span key={level} className="text-2xl font-black text-gray-600">{level}</span>
-              ))}
+              {["Primary", "JSS 1-3", "SSS 1-3", "WAEC", "NECO", "JAMB"].map(
+                (level) => (
+                  <span
+                    key={level}
+                    className="text-2xl font-black text-gray-600"
+                  >
+                    {level}
+                  </span>
+                )
+              )}
             </div>
           </div>
         </div>
@@ -156,16 +171,26 @@ const LandingPage = () => {
                 Follows the NERDC Syllabus.
               </h2>
               <p className="text-lg text-gray-500 leading-relaxed mb-8">
-                Don't waste time on topics that won't appear on the exam. Our curriculum is 100% aligned with Nigerian educational standards, ensuring every quiz and flashcard moves you closer to an A.
+                Don't waste time on topics that won't appear on the exam. Our
+                curriculum is 100% aligned with Nigerian educational standards,
+                ensuring every quiz and flashcard moves you closer to an A.
               </p>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="bg-indigo-100 p-2 rounded-lg text-[#4854F6]"><Check strokeWidth={4} size={20} /></div>
-                  <span className="font-bold text-gray-600">Updated for 2025 Academic Session</span>
+                  <div className="bg-indigo-100 p-2 rounded-lg text-[#4854F6]">
+                    <Check strokeWidth={4} size={20} />
+                  </div>
+                  <span className="font-bold text-gray-600">
+                    Updated for 2025 Academic Session
+                  </span>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="bg-indigo-100 p-2 rounded-lg text-[#4854F6]"><Check strokeWidth={4} size={20} /></div>
-                  <span className="font-bold text-gray-600">Subject-based categorization</span>
+                  <div className="bg-indigo-100 p-2 rounded-lg text-[#4854F6]">
+                    <Check strokeWidth={4} size={20} />
+                  </div>
+                  <span className="font-bold text-gray-600">
+                    Subject-based categorization
+                  </span>
                 </div>
               </div>
             </div>
@@ -173,9 +198,15 @@ const LandingPage = () => {
               <div className="w-64 h-80 bg-white border-4 border-gray-200 rounded-3xl p-6 shadow-[0_8px_0_#e5e7eb] transform rotate-3 hover:rotate-0 transition-transform duration-300">
                 <div className="h-4 w-1/2 bg-gray-200 rounded mb-6"></div>
                 <div className="space-y-4">
-                  <div className="h-20 bg-indigo-100 rounded-xl border-2 border-indigo-200 flex items-center justify-center text-[#4854F6] font-bold">Mathematics</div>
-                  <div className="h-20 bg-blue-100 rounded-xl border-2 border-blue-200 flex items-center justify-center text-blue-600 font-bold">English</div>
-                  <div className="h-20 bg-yellow-100 rounded-xl border-2 border-yellow-200 flex items-center justify-center text-yellow-600 font-bold">Civic Ed.</div>
+                  <div className="h-20 bg-indigo-100 rounded-xl border-2 border-indigo-200 flex items-center justify-center text-[#4854F6] font-bold">
+                    Mathematics
+                  </div>
+                  <div className="h-20 bg-blue-100 rounded-xl border-2 border-blue-200 flex items-center justify-center text-blue-600 font-bold">
+                    English
+                  </div>
+                  <div className="h-20 bg-yellow-100 rounded-xl border-2 border-yellow-200 flex items-center justify-center text-yellow-600 font-bold">
+                    Civic Ed.
+                  </div>
                 </div>
               </div>
             </div>
@@ -188,12 +219,14 @@ const LandingPage = () => {
             <div className="w-full md:w-1/2 flex justify-center">
               <div className="relative">
                 <div className="w-72 h-72 bg-[#4854F6] rounded-full flex items-center justify-center shadow-[0_10px_0_#353EB5]">
-                   <MessageCircle size={120} className="text-white opacity-90" />
+                  <MessageCircle size={120} className="text-white opacity-90" />
                 </div>
                 <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-lg border-2 border-gray-100">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                    <span className="font-bold text-gray-600">Recording...</span>
+                    <span className="font-bold text-gray-600">
+                      Recording...
+                    </span>
                   </div>
                 </div>
               </div>
@@ -203,7 +236,10 @@ const LandingPage = () => {
                 Speak. Learn. Improve.
               </h2>
               <p className="text-lg text-gray-500 leading-relaxed">
-                Struggling with French oral? Need to explain a Physics concept to check your understanding? Use our <strong>Voice Chat AI</strong>. It listens, corrects your pronunciation, and explains complex topics in simple terms.
+                Struggling with French oral? Need to explain a Physics concept
+                to check your understanding? Use our{" "}
+                <strong>Voice Chat AI</strong>. It listens, corrects your
+                pronunciation, and explains complex topics in simple terms.
               </p>
               <button className="mt-8 text-[#4854F6] font-extrabold uppercase tracking-widest hover:underline text-sm">
                 Learn more about our AI
@@ -220,20 +256,22 @@ const LandingPage = () => {
                 Flashcards that feel like a game.
               </h2>
               <p className="text-lg text-gray-500 leading-relaxed mb-8">
-                Create your own decks or use our pre-made NERDC sets. Earn XP, maintain your streak, and climb the leaderboard while mastering Chemistry formulas or History dates.
+                Create your own decks or use our pre-made NERDC sets. Earn XP,
+                maintain your streak, and climb the leaderboard while mastering
+                Chemistry formulas or History dates.
               </p>
             </div>
             <div className="w-full md:w-1/2 flex justify-center order-1 md:order-2">
-               <div className="grid grid-cols-2 gap-4">
-                  <div className="w-32 h-40 bg-yellow-400 rounded-2xl shadow-[0_6px_0_#b45309] flex flex-col items-center justify-center text-white transform -rotate-6">
-                    <Zap size={40} className="mb-2" />
-                    <span className="font-black text-2xl">XP</span>
-                  </div>
-                  <div className="w-32 h-40 bg-purple-500 rounded-2xl shadow-[0_6px_0_#6b21a8] flex flex-col items-center justify-center text-white transform rotate-6 mt-8">
-                    <Trophy size={40} className="mb-2" />
-                    <span className="font-black text-2xl">#1</span>
-                  </div>
-               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="w-32 h-40 bg-yellow-400 rounded-2xl shadow-[0_6px_0_#b45309] flex flex-col items-center justify-center text-white transform -rotate-6">
+                  <Zap size={40} className="mb-2" />
+                  <span className="font-black text-2xl">XP</span>
+                </div>
+                <div className="w-32 h-40 bg-purple-500 rounded-2xl shadow-[0_6px_0_#6b21a8] flex flex-col items-center justify-center text-white transform rotate-6 mt-8">
+                  <Trophy size={40} className="mb-2" />
+                  <span className="font-black text-2xl">#1</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -241,18 +279,18 @@ const LandingPage = () => {
         {/* CTA Strip */}
         <section className="py-20 bg-[#1E293B]">
           <div className="max-w-4xl mx-auto px-4 text-center">
-             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-10 leading-tight">
-               Ready to bring out your Genius?
-             </h2>
-             <a href="/sign-up" className="bg-[#4854F6] text-white px-10 py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-[0_6px_0_#353EB5] hover:bg-[#5964F8] active:translate-y-1 active:shadow-none active:mb-[6px] transition-all">
-               Start Learning for Free
-             </a>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-10 leading-tight">
+              Ready to bring out your Genius?
+            </h2>
+            <a
+              href="/sign-in"
+              className="bg-[#4854F6] text-white px-10 py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-[0_6px_0_#353EB5] hover:bg-[#5964F8] active:translate-y-1 active:shadow-none active:mb-[6px] transition-all"
+            >
+              Start Learning for Free
+            </a>
           </div>
         </section>
-
       </main>
-
-     
     </div>
   );
 };
