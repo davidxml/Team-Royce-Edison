@@ -4,12 +4,11 @@ import React, { useState } from "react";
 import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Nunito } from "next/font/google";
-import Image from "next/image"
+import Image from "next/image";
 import {
   BookOpen,
   Brain,
   Zap,
-  Trophy,
   Flame,
   Target,
   Clock,
@@ -26,11 +25,37 @@ const nunito = Nunito({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+// --- TYPE DEFINITIONS (Fixes the TS Issues) ---
+
+// 1. Define exactly which color keys are allowed
+type ThemeColor = "blue" | "green" | "red" | "yellow" | "purple" | "orange";
+
+// 2. Define the structure of a Course
+interface Course {
+  id: number;
+  title: string;
+  level: string;
+  progress: number;
+  theme: ThemeColor; // Apply the specific color type here
+  icon: React.ReactNode;
+  nextLesson: string;
+}
+
+// 3. Define the structure of a Recommendation
+interface Recommendation {
+  id: number;
+  type: "weakness" | "streak";
+  text: string;
+  action: string;
+  theme: ThemeColor; // Apply the specific color type here
+  icon: React.ReactNode;
+}
+
 export default function Dashboard() {
   const { user } = useUser();
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
 
-  // Mock User Data (Fallbacks if Clerk data isn't fully set yet)
+  // Mock User Data
   const userData = {
     streak: 12,
     xp: 450,
@@ -40,7 +65,8 @@ export default function Dashboard() {
   };
 
   // Gamified Color Palette Map
-  const colors = {
+  // We type this as a Record so TS knows every key is a ThemeColor and every value is a string
+  const colors: Record<ThemeColor, string> = {
     blue: "bg-[#1CB0F6] border-[#1899D6]",
     green: "bg-[#58CC02] border-[#46A302]",
     red: "bg-[#FF4B4B] border-[#EA2B2B]",
@@ -49,8 +75,8 @@ export default function Dashboard() {
     orange: "bg-[#FF9600] border-[#CC7800]",
   };
 
-  // Mock Enrolled Courses
-  const courses = [
+  // Mock Enrolled Courses (Typed)
+  const courses: Course[] = [
     {
       id: 1,
       title: "Mathematics",
@@ -89,8 +115,8 @@ export default function Dashboard() {
     },
   ];
 
-  // AI Recommendations
-  const aiRecommendations = [
+  // AI Recommendations (Typed)
+  const aiRecommendations: Recommendation[] = [
     {
       id: 1,
       type: "weakness",
@@ -153,17 +179,17 @@ export default function Dashboard() {
           <Link href="/dashboard">
             <div className="flex items-center gap-2 cursor-pointer group">
               {/* Animated Logo Icon */}
-             <Image
-                               src="/logo.svg"
-                               alt="Edison Logo"
-                               width={120}
-                               height={50}
-                             />
+              <Image
+                src="/logo.svg"
+                alt="Edison Logo"
+                width={120}
+                height={50}
+              />
             </div>
           </Link>
 
           <div className="flex items-center gap-4 md:gap-6">
-            {/* Stats Capsules (Bubbly Style) */}
+            {/* Stats Capsules */}
             <div className="hidden md:flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-2xl cursor-pointer transition-colors border-2 border-transparent hover:border-gray-200">
               <Flame size={24} className="text-[#FF9600] fill-[#FF9600]" />
               <span className="font-extrabold text-[#FF9600]">
@@ -180,7 +206,10 @@ export default function Dashboard() {
             {/* User Profile - Clerk Integration */}
             <div className="flex items-center gap-4 pl-4 border-l border-gray-200">
               <div className="relative cursor-pointer hover:scale-110 transition-transform">
-                <Bell size={28} className="text-gray-400 hover:text-gray-600" />
+                <Bell
+                  size={28}
+                  className="text-gray-400 hover:text-gray-600"
+                />
                 <span className="absolute top-0 right-0 w-3 h-3 bg-[#FF4B4B] rounded-full border-2 border-white"></span>
               </div>
 
@@ -367,7 +396,7 @@ export default function Dashboard() {
                 </div>
                 {/* Locked Achievement */}
                 <div className="flex flex-col items-center gap-2 opacity-50">
-                  <div className="w-24 h-24 bg-gray-100 rounded-2xl border-b-4 border-gray-200 flex items-center justify-center border-dashed border-2 border-gray-300">
+                  <div className="w-24 h-24 bg-gray-100 rounded-2xl border-b-4 flex items-center justify-center border-dashed border-2 border-gray-300">
                     <Gift
                       size={48}
                       className="text-gray-300"
@@ -399,7 +428,11 @@ export default function Dashboard() {
                 <h3 className="font-black text-xl text-gray-700">
                   Daily Quests
                 </h3>
-                <Clock size={20} className="text-[#1CB0F6]" strokeWidth={2.5} />
+                <Clock
+                  size={20}
+                  className="text-[#1CB0F6]"
+                  strokeWidth={2.5}
+                />
               </div>
 
               <div className="space-y-6">
@@ -455,7 +488,10 @@ export default function Dashboard() {
                       Top 10 Advance
                     </p>
                   </div>
-                  <ChevronRight className="text-gray-300" strokeWidth={3} />
+                  <ChevronRight
+                    className="text-gray-300"
+                    strokeWidth={3}
+                  />
                 </div>
               </Link>
 
