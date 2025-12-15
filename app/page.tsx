@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import {
   BookOpen,
@@ -132,18 +133,18 @@ const LandingPage = () => {
               </p>
 
               <div className="flex flex-col gap-4 max-w-sm mx-auto lg:mx-0">
-                <a
+                <Link
                   href="/sign-in"
-                  className="btn-primary w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-lg"
+                  className="btn-primary w-full text-center py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-lg"
                 >
                   Get Started
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/sign-in"
-                  className="btn-outline w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-sm"
+                  className="btn-outline w-full text-center py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-sm"
                 >
                   I already have an account
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -289,12 +290,12 @@ const LandingPage = () => {
             <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-10 leading-tight">
               Ready to bring out your Genius?
             </h2>
-            <a
+            <Link
               href="/sign-in"
               className="bg-[#4854F6] text-white px-10 py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-[0_6px_0_#353EB5] hover:bg-[#5964F8] active:translate-y-1 active:shadow-none active:mb-[6px] transition-all"
             >
               Start Learning for Free
-            </a>
+            </Link>
           </div>
         </section>
       </main>

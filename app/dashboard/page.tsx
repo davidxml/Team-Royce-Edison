@@ -197,8 +197,8 @@ export default function Dashboard() {
               </span>
             </div>
             <div className="hidden md:flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-2xl cursor-pointer transition-colors border-2 border-transparent hover:border-gray-200">
-              <Zap size={24} className="text-[#1CB0F6] fill-[#1CB0F6]" />
-              <span className="font-extrabold text-[#1CB0F6]">
+              <Zap size={24} className="text-[#4854F6] fill-[#4854F6]" />
+              <span className="font-extrabold text-[#4854F6]">
                 {userData.xp}
               </span>
             </div>
@@ -296,7 +296,7 @@ export default function Dashboard() {
                   </Link>
                   <button
                     onClick={() => setIsAddCourseModalOpen(true)}
-                    className="text-[#1CB0F6] font-extrabold text-sm uppercase tracking-wider hover:bg-blue-50 px-4 py-2 rounded-xl transition-colors border-2 border-transparent hover:border-blue-100"
+                    className="text-[#4854F6] font-extrabold text-sm uppercase tracking-wider hover:bg-blue-50 px-4 py-2 rounded-xl transition-colors border-2 border-transparent hover:border-blue-100"
                   >
                     + Add Course
                   </button>
@@ -325,7 +325,7 @@ export default function Dashboard() {
                         </div>
 
                         <div className="mt-auto">
-                          <h3 className="font-black text-xl text-gray-700 mb-1 group-hover:text-[#1CB0F6] transition-colors">
+                          <h3 className="font-black text-xl text-gray-700 mb-1 group-hover:text-[#4854F6] transition-colors">
                             {course.title}
                           </h3>
 
@@ -336,7 +336,7 @@ export default function Dashboard() {
                               <span
                                 className={`${
                                   course.theme === "blue"
-                                    ? "text-[#1CB0F6]"
+                                    ? "text-[#4854F6]"
                                     : "text-gray-400"
                                 }`}
                               >
@@ -348,7 +348,7 @@ export default function Dashboard() {
                                 className={`h-full rounded-full ${
                                   colors[course.theme].split(" ")[0]
                                 }`}
-                                style={{ width: `${course.progress}%` }}
+                                style={{ width: `${course.progress}%`, inset: "0" }}
                               >
                                 <div className="w-full h-full bg-white/20 rounded-full mt-1 ml-1"></div>
                               </div>
@@ -430,7 +430,7 @@ export default function Dashboard() {
                 </h3>
                 <Clock
                   size={20}
-                  className="text-[#1CB0F6]"
+                  className="text-[#4854F6]"
                   strokeWidth={2.5}
                 />
               </div>
@@ -476,7 +476,7 @@ export default function Dashboard() {
               <Link href="/leaderboard">
                 <div className="flex items-center gap-4 mb-4 hover:bg-gray-50 p-2 rounded-xl transition-colors cursor-pointer">
                   <div className="w-14 h-14 rounded-full border-2 border-gray-200 p-1">
-                    <div className="w-full h-full bg-[#1CB0F6] rounded-full flex items-center justify-center text-white font-black">
+                    <div className="w-full h-full bg-[#4854F6] rounded-full flex items-center justify-center text-white font-black">
                       #{userData.leagueRank}
                     </div>
                   </div>
@@ -538,7 +538,7 @@ export default function Dashboard() {
                 <p className="text-sm text-gray-300 mb-6 font-medium leading-relaxed">
                   No ads, unlimited hearts, and personalized mistake review.
                 </p>
-                <button className="btn-3d w-full bg-white text-[#1CB0F6] font-extrabold py-3.5 rounded-xl uppercase tracking-widest text-sm shadow-[0_4px_0_#d1d5db]">
+                <button className="btn-3d w-full bg-white text-[#4854F6] font-extrabold py-3.5 rounded-xl uppercase tracking-widest text-sm shadow-[0_4px_0_#d1d5db]">
                   Try 2 Weeks Free
                 </button>
               </div>
