@@ -2,9 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { SignedIn } from "@clerk/nextjs";
 import Link from "next/link";
-import { Mic, MicOff, X, Send, Bot, User, Loader2 } from "lucide-react";
+import { Mic, MicOff, X, Send, Bot, User } from "lucide-react";
 
 export default function Session() {
   const [isRecording, setIsRecording] = useState(false);
@@ -44,7 +43,6 @@ export default function Session() {
   };
 
   return (
-    <SignedIn>
       <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {/* Header */}
@@ -168,7 +166,6 @@ export default function Session() {
           </motion.div>
         </div>
       </div>
-    </SignedIn>
   );
 }
 

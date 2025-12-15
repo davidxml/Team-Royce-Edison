@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 import "./globals.css";
+import { ProfileProvider } from "@/context/ProfileContext";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -33,7 +34,9 @@ export default function RootLayout({
           className={`${bricolage.variable} antialiased flex flex-col min-h-screen`}
         >
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1">
+            <ProfileProvider>{children}</ProfileProvider>
+          </main>
           <Footer />
         </body>
       </html>
