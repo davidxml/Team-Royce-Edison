@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Nunito } from "next/font/google";
@@ -18,6 +18,7 @@ import {
   Bell,
   Gift,
 } from "lucide-react";
+import { AddCourseModal } from "@/components/modals/add-course-modal";
 
 // Optimize Font Loading
 const nunito = Nunito({
@@ -27,6 +28,7 @@ const nunito = Nunito({
 
 export default function Dashboard() {
   const { user } = useUser();
+  const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
 
   // Mock User Data (Fallbacks if Clerk data isn't fully set yet)
   const userData = {
@@ -109,6 +111,10 @@ export default function Dashboard() {
 
   return (
     <SignedIn>
+      <AddCourseModal
+        isOpen={isAddCourseModalOpen}
+        onClose={() => setIsAddCourseModalOpen(false)}
+      />
       <div
         className={`min-h-screen bg-gray-50 text-gray-700 ${nunito.className}`}
       >
@@ -246,11 +252,11 @@ export default function Dashboard() {
               </div>
             </section>
 
-            {/* My Courses */}
+            {/* recent Courses */}
             <section>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-black text-gray-700">
-                  My Courses
+                  Recent Courses
                 </h2>
                 <div className="flex items-center gap-2">
                   <Link
@@ -259,11 +265,12 @@ export default function Dashboard() {
                   >
                     View All
                   </Link>
-                  <Link href="/courses/new">
-                    <button className="text-[#1CB0F6] font-extrabold text-sm uppercase tracking-wider hover:bg-blue-50 px-4 py-2 rounded-xl transition-colors border-2 border-transparent hover:border-blue-100">
-                      + Add Course
-                    </button>
-                  </Link>
+                  <button
+                    onClick={() => setIsAddCourseModalOpen(true)}
+                    className="text-[#1CB0F6] font-extrabold text-sm uppercase tracking-wider hover:bg-blue-50 px-4 py-2 rounded-xl transition-colors border-2 border-transparent hover:border-blue-100"
+                  >
+                    + Add Course
+                  </button>
                 </div>
               </div>
 
