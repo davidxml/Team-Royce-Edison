@@ -32,9 +32,7 @@ export default function RootLayout({
         <body
           className={`${bricolage.variable} antialiased flex flex-col min-h-screen`}
         >
-          <Header />
           <main className="flex-1">{children}</main>
-          <Footer />
         </body>
       </html>
     </ClerkProvider>

@@ -16,9 +16,16 @@ import {
   Star,
   Check,
 } from "lucide-react";
-
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+  
 const LandingPage = () => {
   return (
+<>
+  <Header/>
+  
+
+
     <div className="font-sans text-gray-800 antialiased bg-white selection:bg-indigo-100 selection:text-indigo-800">
       {/* Google Font Import (Nunito matches Duolingo's roundness) */}
       <style>{`
@@ -292,6 +299,10 @@ const LandingPage = () => {
         </section>
       </main>
     </div>
+
+    <Footer/>
+
+    </>
   );
 };
 
