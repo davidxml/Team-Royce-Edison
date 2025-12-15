@@ -252,7 +252,7 @@ export default function Dashboard() {
               </div>
             </section>
 
-            {/* recent Courses */}
+            {/* Recent Courses */}
             <section>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-black text-gray-700">
