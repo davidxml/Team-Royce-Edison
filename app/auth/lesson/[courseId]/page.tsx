@@ -4,7 +4,10 @@ import { motion } from "framer-motion";
 import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Nunito } from "next/font/google";
-
+import {
+  QuestItem,
+  Target
+} from "@/components/ui/dashboard-subcomponents";
 import Image from "next/image";
 import {
   Book,
@@ -24,6 +27,7 @@ import {
   ChevronRight,
   Dumbbell,
 } from "lucide-react";
+import Sidebar from "@/components/Sidebar";
 
 // Initialize Font
 const nunito = Nunito({
@@ -112,81 +116,7 @@ export default function Dashboard() {
                     }
                 `}</style>
               {/* --- LEFT SIDEBAR (Navigation) --- */}
-              <aside className="w-20 lg:w-64 border-r border-gray-200 fixed h-full bg-white z-40 hidden md:flex flex-col px-4 py-6">
-                  {/* Logo */}
-                  <Link href="/auth/dashboard" className="mb-8 px-2 lg:px-4 cursor-pointer">
-                    <div className="flex items-center gap-2">
-                         
-                            <Image
-              src="/logo.svg"
-                                  alt="Edison Logo"
-                                  width={120}
-                                  height={50}
-                                  />
-                         
-                      </div>
-                    </Link>
-                  {/* Nav Items - Mapped to real routes if needed, or keeping active state */}
-                  <nav className="flex-1 space-y-2">
-                      <NavItem
-          href="/auth/dashboard"
-                          icon={<Book size={28} />}
-                          label="Learn"
-                          isActive={activeTab === "learn"}
-                          onClick={() => setActiveTab("learn")}
-                          />
-                      <NavItem
-          href="/auth/voice-ai"
-                          icon={<Mic size={28} />}
-                          label="Voice Chat AI"
-                          isActive={activeTab === "voice"}
-                          onClick={() => setActiveTab("voice")}
-                          badge="NEW"
-                          />
-                      <NavItem
-          href="/auth/practice"
-                          icon={<Dumbbell size={28} />}
-                          label="Practice"
-                          isActive={activeTab === "practice"}
-                          onClick={() => setActiveTab("practice")}
-                          />
-                      <NavItem
-          href="/auth/flashcards"
-                          icon={<Layers size={28} />}
-                          label="Flashcards"
-                          isActive={activeTab === "cards"}
-                          onClick={() => setActiveTab("cards")}
-                          />
-                      <NavItem
-          href="/auth/notes"
-                          icon={<PenTool size={28} />}
-                          label="Notes"
-                          isActive={activeTab === "notes"}
-                          onClick={() => setActiveTab("notes")}
-                          />
-                      <NavItem
-          href="/auth/leaderboard"
-                          icon={<Trophy size={28} />}
-                          label="Leaderboard"
-                          isActive={activeTab === "leaderboard"}
-                          onClick={() => setActiveTab("leaderboard")}
-                          />
-                      <NavItem
-          href="/auth/profile"
-                          icon={<User size={28} />}
-                          label="Profile"
-                          isActive={activeTab === "profile"}
-                          onClick={() => setActiveTab("profile")}
-                          />
-                    </nav>
-                  {/* User Profile Mini - Clerk Integration */}
-                  <div className="mt-auto pt-4 border-t border-gray-100 flex items-center gap-3 px-2">
-                      <UserButton afterSignOutUrl="/" />
-                      <div className="hidden lg:block text-sm font-bold truncate">
-                          {user?.fullName || "Student"}
-                        </div>
-                    </div>
-                </aside>
+              <Sidebar/>
               {/* --- MAIN CONTENT (The Path) --- */}
               <main className="flex-1 md:ml-20 lg:ml-64 mr-0 lg:mr-96 px-4 max-w-2xl mx-auto w-full pb-24">
                   {/* Mobile Header (Visible only on small screens) */}
@@ -437,159 +367,8 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </aside>
-              {/* --- MOBILE BOTTOM NAV --- */}
-              <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center h-20 px-2 pb-2 z-50">
-                  <MobileNavItem
-        href="/auth/dashboard"
-                      icon={<Book size={24} />}
-                      label="Learn"
-                      isActive={activeTab === "learn"}
-                      onClick={() => setActiveTab("learn")}
-                      />
-                  <MobileNavItem
-        href="/auth/voice-ai"
-                      icon={<Mic size={24} />}
-                      label="Speak"
-                      isActive={activeTab === "voice"}
-                      onClick={() => setActiveTab("voice")}
-                      />
-                  <MobileNavItem
-        href="/auth/practice"
-                      icon={<Dumbbell size={24} />}
-                      label="Practice"
-                      isActive={activeTab === "practice"}
-                      onClick={() => setActiveTab("practice")}
-                      />
-                  <MobileNavItem
-        href="/auth/flashcards"
-                      icon={<Layers size={24} />}
-                      label="Cards"
-                      isActive={activeTab === "cards"}
-                      onClick={() => setActiveTab("cards")}
-                      />
-                  <MobileNavItem
-        href="/auth/leaderboard"
-                      icon={<Trophy size={24} />}
-                      label="Rank"
-                      isActive={activeTab === "leaderboard"}
-                      onClick={() => setActiveTab("leaderboard")}
-                      />
-                  <MobileNavItem
-        href="/auth/profile"
-                      icon={<User size={24} />}
-                      label="Profile"
-                      isActive={activeTab === "profile"}
-                      onClick={() => setActiveTab("profile")}
-                      />
-                </div>
+             
             </div>
         </SignedIn>
   );
 }
-
-// --- SUBCOMPONENTS ---// 
-interface NavItemProps {
-  icon: React.ReactNode;
-  label: string;
-  isActive: boolean;
-  onClick?: () => void;
-  badge?: string | number;
-  href?: string;
-}
-
-// Updated to support Next.js Link with TypeScript
-export const NavItem = ({ icon, label, isActive, onClick, badge, href }: NavItemProps) => {
-  return (
-      <Link href={href || "#"}>
-          <button
-    onClick={onClick}
-              className={`
-                  flex items-center gap-4 px-4 py-3 rounded-xl w-full transition-all duration-200
-                              ${
-                                  isActive
-                                  ? "bg-indigo-50 border-2 border-indigo-100 text-[#4854F6]"
-                                      : "hover:bg-gray-100 border-2 border-transparent text-gray-500"
-                                    }
-                              `}
-                              >
-              <div className="relative">
-                  {icon}
-                  {badge && (
-          <span className="absolute -top-2 -right-4 bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md">
-                          {badge}
-                        </span>
-          )}
-                </div>
-              <span className="hidden lg:block font-bold uppercase tracking-widest text-sm">
-                  {label}
-                </span>
-            </button>
-        </Link>
-  );
-};
-
-const MobileNavItem = ({ icon, label, isActive, onClick, href }: NavItemProps) => (
-  <Link href={href || "#"} className="w-full h-full">
-      <button
-  onClick={onClick}
-          className="flex flex-col items-center gap-1 w-full h-full justify-center"
-          >
-          <div className={`${isActive ? "text-[#4854F6]" : "text-gray-400"}`}>
-              {icon}
-            </div>
-        </button>
-    </Link>
-);
-
-interface QuestItemProps {
-    title: string;
-    progress: number;
-    total: number;
-    icon: React.ReactNode;
-}
-
-const QuestItem = ({ title, progress, total, icon }: QuestItemProps) => (
-  <div className="flex items-center gap-3">
-      <div className="p-2 bg-gray-100 rounded-lg">{icon}</div>
-      <div className="flex-1">
-          <div className="flex justify-between mb-1">
-              <span className="font-bold text-gray-700 text-sm">{title}</span>
-              <span className="font-bold text-gray-400 text-xs">
-                  {progress}/{total}
-                </span>
-            </div>
-          <div className="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
-              <motion.div
-      initial={{ width: 0 }}
-                  whileInView={{ width: `${(progress / total) * 100}%` }}
-                  transition={{ duration: 1 }}
-                  className="bg-yellow-400 h-full rounded-full"
-                  ></motion.div>
-            </div>
-        </div>
-    </div>
-);
-// Icon component helper
-interface TargetProps {
-  size: number | string;
-  className?: string;
-}
-
-const Target = ({ size, className }: TargetProps) => (
-  <svg
-  xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      >
-      <circle cx="12" cy="12" r="10" />
-      <circle cx="12" cy="12" r="6" />
-      <circle cx="12" cy="12" r="2" />
-    </svg>
-);
