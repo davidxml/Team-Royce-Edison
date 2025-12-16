@@ -1,522 +1,125 @@
-"use client";
-
-import React, { useState } from "react";
+import { createClient } from "@/utils/supabase/server";
+import CourseMapClient from "./CourseMapClient";
 import Sidebar from "@/components/Sidebar";
-import { motion } from "framer-motion";
-import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
-import Link from "next/link";
-import { Nunito } from "next/font/google"; // Optimized font loading
-import {
-  Book,
-  Layers,
-  Trophy,
-  User,
-  Flame,
-  Zap,
-  Heart,
-  Star,
-  Lock,
-  Check,
-  Mic,
-  ChevronRight,
-  Dumbbell,
-} from "lucide-react";
+import Link from "next/link"; // Needed for the Empty State button
 
-// Initialize Font
-const nunito = Nunito({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-});
+export default async function CoursePage({
+  params,
+}: {
+  params: Promise<{ courseId: string }>;
+}) {
+  const supabase = await createClient();
+  const { courseId } = await params;
 
-export default function CourseDashboard() {
-  const { user } = useUser();
-  const [activeTab, setActiveTab] = useState("learn");
+  // --- DEBUG LOGGING START ---
+  console.log("🔍 Fetching course:", courseId);
+  // --- DEBUG LOGGING END ---
 
-  // Mock Data for the Nigerian Curriculum Path (e.g., JSS 1 Math)
-  const units = [
-    {
-      id: 1,
-      title: "Unit 1: Number Bases",
-      description: "Learn about binary and base 10 systems.",
-      color: "bg-[#4854F6]", // Edison Blue
-      lessons: [
-        { id: 1, status: "completed", stars: 3, icon: <Star size={20} /> },
-        { id: 2, status: "completed", stars: 2, icon: <Book size={20} /> },
-        { id: 3, status: "current", stars: 0, icon: <Star size={24} /> }, // Larger current icon
-        { id: 4, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 5, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 6, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 7, status: "locked", stars: 0, icon: <Trophy size={22} /> }, // Unit test
-      ],
-    },
-    {
-      id: 2,
-      title: "Unit 2: Algebraic Simplification",
-      description: "Grouping terms and basic equations.",
-      color: "bg-emerald-500",
-      lessons: [
-        { id: 8, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 9, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 10, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 11, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 12, status: "locked", stars: 0, icon: <Trophy size={22} /> },
-      ],
-    },
-    {
-      id: 3,
-      title: "Unit 3: Geometry & Shapes",
-      description: "Angles, lines, and 2D properties.",
-      color: "bg-orange-500",
-      lessons: [
-        { id: 13, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 14, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 15, status: "locked", stars: 0, icon: <Trophy size={22} /> },
-      ],
-    },
-    {
-      id: 4,
-      title: "Unit 4: Geometry & Shapes",
-      description: "Angles, lines, and 2D properties.",
-      color: "bg-blue-500",
-      lessons: [
-        { id: 13, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 14, status: "locked", stars: 0, icon: <Book size={20} /> },
-        { id: 15, status: "locked", stars: 0, icon: <Trophy size={22} /> },
-      ],
-    },
-  ];
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // 1. Fetch Topics (Units)
+  // We use a "left join" by default. If lessons are empty, topic still shows.
+  const { data: topics, error } = await supabase
+    .from("topics")
+    .select(`
+      id, title, description, color_theme, order_index,
+      lessons ( id, title, order_index ),
+      user_progress: student_progress ( mastery_score ) 
+    `)
+    .eq("subject_id", courseId)
+    .order("order_index", { ascending: true });
+
+  if (error) {
+    console.error("❌ Supabase Error:", error.message);
+    return <div className="p-10 text-red-500">Error loading course: {error.message}</div>;
+  }
+
+  // --- DEBUG LOGGING ---
+  console.log(`✅ Found ${topics?.length || 0} topics.`);
+  if (topics && topics.length > 0) {
+    console.log(`First topic has ${topics[0].lessons?.length || 0} lessons.`);
+    if (topics[0].lessons?.length === 0) {
+      console.log("⚠️ WARNING: Topics exist but have NO lessons linked via 'topic_id'.");
+    }
+  }
+  // ---------------------
+
+  // 2. Fetch User Progress
+  const { data: completedLessons } = await supabase
+    .from("user_lesson_states")
+    .select("lesson_id, status")
+    .eq("user_id", user?.id);
+
+  const completedSet = new Set(completedLessons?.map((l) => l.lesson_id));
+
+  // 3. Transform Data
+  let foundActive = false;
+  const units = (topics || []).map((topic) => {
+    // Sort lessons (handle null/undefined safely)
+    const sortedLessons = (topic.lessons || []).sort((a: any, b: any) => a.order_index - b.order_index);
+
+    const levels = sortedLessons.map((lesson: any) => {
+      const isCompleted = completedSet.has(lesson.id);
+      let status = "locked";
+
+      if (isCompleted) {
+        status = "completed";
+      } else if (!foundActive) {
+        status = "current";
+        foundActive = true;
+      }
+
+      return {
+        id: lesson.id,
+        order_index: lesson.order_index,
+        status,
+        stars: 0,
+      };
+    });
+
+    // If unit has no lessons, force at least one level to show UI (Optional Debug Hack)
+    if (levels.length === 0) {
+       levels.push({ id: "debug-1", order_index: 1, status: "current", stars: 0 });
+    } 
+    
+
+    return {
+      id: topic.id,
+      title: topic.title,
+      description: topic.description || "No description",
+      color_theme: topic.color_theme || "bg-[#4854F6]",
+      levels,
+    };
+  });
 
   return (
-    <SignedIn>
-      <div
-        className={`min-h-screen bg-white text-gray-700 flex ${nunito.className}`}
-      >
-        {/* CSS for custom interactions */}
-        <style jsx global>{`
-          /* Custom Scrollbar */
-          ::-webkit-scrollbar {
-            width: 8px;
-          }
-          ::-webkit-scrollbar-track {
-            background: transparent;
-          }
-          ::-webkit-scrollbar-thumb {
-            background: #e5e7eb;
-            border-radius: 10px;
-          }
-          ::-webkit-scrollbar-thumb:hover {
-            background: #d1d5db;
-          }
-
-          /* Button Press Effect */
-          .btn-press {
-            transition: all 0.1s;
-            border-bottom-width: 4px;
-          }
-          .btn-press:active {
-            transform: translateY(2px);
-            border-bottom-width: 0px;
-            margin-bottom: 4px;
-          }
-        `}</style>
-          {/* Left Sidebar */}
-       <Sidebar/>
-
-        {/* --- MAIN CONTENT (The Path) --- */}
-        <main className="flex-1 md:ml-20 lg:ml-64 mr-0 lg:mr-96 px-4 max-w-2xl mx-auto w-full pb-24">
-          {/* Mobile Header (Visible only on small screens) */}
-          <div className="md:hidden flex items-center justify-between py-4 border-b border-gray-100 sticky top-0 bg-white/95 backdrop-blur z-50">
-            <span className="text-xl font-black text-[#4854F6]">Edison</span>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1 text-orange-500 font-bold">
-                <Flame size={20} fill="currentColor" /> 12
-              </div>
-              <div className="flex items-center gap-1 text-blue-500 font-bold">
-                <Zap size={20} fill="currentColor" /> 450
-              </div>
-              <UserButton afterSignOutUrl="/" />
-            </div>
-          </div>
-
-          {/* FIXED COURSE HEADER */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm pt-6 pb-4 border-b border-gray-100 mb-6"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 hover:bg-gray-100 p-2 -ml-2 rounded-xl cursor-pointer transition-colors group">
-                <div className="w-10 h-8 rounded-lg border-2 border-gray-300 group-hover:border-gray-400 flex items-center justify-center bg-white">
-                  <img
-                    src="https://flagcdn.com/w40/ng.png"
-                    alt="Nigeria"
-                    className="w-6 h-4 object-cover rounded-sm opacity-80"
-                  />
-                </div>
-                <div>
-                  <h2 className="font-extrabold text-gray-400 text-xs uppercase tracking-wider">
-                    Current Course
-                  </h2>
-                  <h1 className="font-black text-gray-700 text-lg md:text-xl">
-                    JSS 1 Mathematics
-                  </h1>
-                </div>
-                <ChevronRight className="text-gray-400 group-hover:rotate-90 transition-transform" />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Learning Path Units */}
-          <div className="space-y-4">
-            {units.map((unit) => (
-              <div key={unit.id} className="relative pb-10">
-                {/* STICKY UNIT BANNER */}
-                <div
-                  className={`sticky top-28 z-20 ${unit.color} text-white rounded-2xl p-4 mb-12 flex justify-between items-center shadow-lg mx-2`}
-                >
-                  <div>
-                    <h3 className="font-bold text-lg opacity-90">
-                      {unit.title}
-                    </h3>
-                    <p className="text-sm font-medium opacity-75">
-                      {unit.description}
-                    </p>
-                  </div>
-                  <Link
-                    href={`/unit/${unit.id}`}
-                    className="bg-white/20 hover:bg-white/30 p-2 rounded-xl transition-colors"
-                  >
-                    <Book size={24} />
-                  </Link>
-                </div>
-
-                {/* The Winding Path of Nodes */}
-                <div className="flex flex-col items-center gap-6 relative">
-                  {unit.lessons.map((lesson, index) => {
-                    // Snake Path Logic
-                    const offsetClass =
-                      index % 4 === 1
-                        ? "-translate-x-12"
-                        : index % 4 === 2
-                        ? "-translate-x-12"
-                        : index % 4 === 3
-                        ? "translate-x-12"
-                        : index % 4 === 0 && index !== 0
-                        ? "translate-x-12"
-                        : "";
-
-                    return (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        key={lesson.id}
-                        className={`transform ${offsetClass} relative group`}
-                      >
-                        {/* Floating Tooltip for Current Lesson */}
-                        {lesson.status === "current" && (
-                          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-white text-gray-700 font-bold py-1 px-3 rounded-xl border-2 border-gray-200 shadow-sm whitespace-nowrap z-10 animate-bounce">
-                            START
-                            <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-b-2 border-r-2 border-gray-200 transform rotate-45"></div>
-                          </div>
-                        )}
-
-                        {/* Lesson Button */}
-                        <Link href={`/lesson/${lesson.id}`}>
-                          <button
-                            disabled={lesson.status === "locked"}
-                            className={`
-                                w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center relative
-                                transition-all duration-200 btn-press
-                                ${
-                                  lesson.status === "completed"
-                                    ? "bg-[#FFC800] border-[#E5B400] text-white shadow-[0_4px_0_#E5B400]"
-                                    : lesson.status === "current"
-                                    ? "bg-[#4854F6] border-[#353EB5] text-white shadow-[0_4px_0_#353EB5]"
-                                    : "bg-gray-200 border-gray-300 text-gray-400 shadow-[0_4px_0_#D1D5DB] cursor-not-allowed"
-                                }
-                            `}
-                          >
-                            {lesson.status === "completed" && (
-                              <div className="absolute -top-1 -right-1 bg-white rounded-full p-1 shadow-sm">
-                                <Check
-                                  size={12}
-                                  className="text-[#FFC800] stroke-4"
-                                />
-                              </div>
-                            )}
-
-                            {lesson.status === "locked" ? (
-                              <Lock size={24} opacity={0.5} />
-                            ) : (
-                              lesson.icon
-                            )}
-
-                            {lesson.status === "current" && (
-                              <svg className="absolute -top-2 -left-2 w-20 h-20 md:w-24 md:h-24 pointer-events-none opacity-40">
-                                <circle
-                                  cx="50%"
-                                  cy="50%"
-                                  r="45%"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="6"
-                                  strokeDasharray="10 10"
-                                />
-                              </svg>
-                            )}
-                          </button>
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </main>
-
-        {/* --- RIGHT SIDEBAR (Stats & Quests) --- */}
-        <aside className="hidden lg:block w-96 p-6 fixed right-0 h-full overflow-y-auto z-40 bg-white border-l border-gray-200">
-          {/* Top Stats Bar */}
-          <div className="flex items-center gap-4 mb-10">
-            <div className="group relative flex items-center gap-2 cursor-pointer">
-              <img
-                src="https://flagcdn.com/w40/ng.png"
-                className="w-8 h-5 rounded-md object-cover border border-gray-200"
-                alt="Flag"
-              />
-              
-            </div>
-            <div className="flex items-center gap-2 text-orange-500 font-bold hover:bg-gray-100 px-2 py-1 rounded-xl cursor-pointer">
-              <Flame size={24} fill="currentColor" /> 12
-            </div>
-            <div className="flex items-center gap-2 text-blue-400 font-bold hover:bg-gray-100 px-2 py-1 rounded-xl cursor-pointer">
-              <Zap size={24} fill="currentColor" /> 450
-            </div>
-            <div className="flex items-center gap-2 text-red-500 font-bold hover:bg-gray-100 px-2 py-1 rounded-xl cursor-pointer">
-              <Heart size={24} fill="currentColor" /> 5
-            </div>
-          </div>
-
-          {/* "Try Super" Ad Card */}
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            className="border-2 border-gray-200 rounded-2xl p-4 mb-6 hover:border-gray-300 transition-all cursor-pointer"
-          >
-            <h3 className="font-black text-gray-800 text-lg mb-2">
-              Super Edison
-            </h3>
-            <p className="text-gray-500 mb-4 text-sm leading-relaxed">
-              Unlimited hearts, personalized mistakes review, and no ads.
+    <div className="flex">
+      <div className="hidden md:block">
+        <Sidebar />
+      </div>
+      <div className="flex-1">
+        {units.length > 0 ? (
+           <CourseMapClient units={units} courseId={courseId} />
+        ) : (
+          /* EMPTY STATE UI */
+          <div className="flex flex-col items-center justify-center min-h-screen text-center p-8">
+            <h2 className="text-2xl font-bold text-gray-700 mb-2">This course is empty!</h2>
+            <p className="text-gray-500 mb-6">
+              We couldn't find any Units or Lessons for Course ID: <code className="bg-gray-100 p-1 rounded">{courseId}</code>
             </p>
-            <button className="w-full py-3 rounded-xl font-bold uppercase tracking-widest text-sm bg-linear-to-r from-indigo-500 to-purple-500 text-white shadow-md hover:brightness-110 active:scale-95 transition-all">
-              Try 2 Weeks Free
-            </button>
-          </motion.div>
-
-          {/* Daily Quests */}
-          <div className="border-2 border-gray-200 rounded-2xl p-4 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-black text-gray-700 text-lg">Daily Quests</h3>
-              <Link
-                href="/quests"
-                className="text-blue-400 text-sm font-bold uppercase hover:text-blue-500"
-              >
-                View all
-              </Link>
+            <div className="bg-blue-50 p-4 rounded-xl text-left text-sm text-blue-800 border border-blue-200">
+               <strong>Troubleshooting:</strong>
+               <ul className="list-disc pl-5 mt-2 space-y-1">
+                 <li>Check your <code>topics</code> table. Do any have <code>subject_id</code> matching this ID?</li>
+                 <li>Check your <code>lessons</code> table. Did you link them to topics using <code>topic_id</code>?</li>
+               </ul>
             </div>
-
-            <div className="space-y-4">
-              <QuestItem
-                title="Earn 50 XP"
-                progress={30}
-                total={50}
-                icon={<Zap size={20} className="text-blue-500" />}
-              />
-              <QuestItem
-                title="Complete 2 Voice Sessions"
-                progress={1}
-                total={2}
-                icon={<Mic size={20} className="text-purple-500" />}
-              />
-              <QuestItem
-                title="Score 90% in Math Quiz"
-                progress={0}
-                total={1}
-                icon={<Target size={20} className="text-red-500" />}
-              />
-            </div>
+            <Link href="/dashboard" className="mt-8 text-blue-500 font-bold hover:underline">
+              ← Go back to Dashboard
+            </Link>
           </div>
-
-          {/* Leaderboard Teaser */}
-          <div className="border-2 border-gray-200 rounded-2xl p-4">
-            <h3 className="font-black text-gray-700 text-lg mb-4">
-              Diamond League
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
-                  JD
-                </div>
-                <div className="flex-1">
-                  <div className="font-bold text-gray-700">John Doe</div>
-                  <div className="text-xs text-gray-400">1200 XP</div>
-                </div>
-                <Trophy
-                  size={20}
-                  className="text-yellow-400"
-                  fill="currentColor"
-                />
-              </div>
-              <div className="flex items-center gap-3 opacity-60">
-                <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                  SA
-                </div>
-                <div className="flex-1">
-                  <div className="font-bold text-gray-700">Sarah A.</div>
-                  <div className="text-xs text-gray-400">950 XP</div>
-                </div>
-                <span className="font-bold text-gray-400">#2</span>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        {/* --- MOBILE BOTTOM NAV --- */}
-        <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center h-20 px-2 pb-2 z-50">
-          <MobileNavItem
-            href="/dashboard"
-            icon={<Book size={24} />}
-            label="Learn"
-            isActive={activeTab === "learn"}
-            onClick={() => setActiveTab("learn")}
-          />
-          <MobileNavItem
-            href="/voice-ai"
-            icon={<Mic size={24} />}
-            label="Speak"
-            isActive={activeTab === "voice"}
-            onClick={() => setActiveTab("voice")}
-          />
-          <MobileNavItem
-            href="/practice"
-            icon={<Dumbbell size={24} />}
-            label="Practice"
-            isActive={activeTab === "practice"}
-            onClick={() => setActiveTab("practice")}
-          />
-          <MobileNavItem
-            href="/flashcards"
-            icon={<Layers size={24} />}
-            label="Cards"
-            isActive={activeTab === "cards"}
-            onClick={() => setActiveTab("cards")}
-          />
-          <MobileNavItem
-            href="/leaderboard"
-            icon={<Trophy size={24} />}
-            label="Rank"
-            isActive={activeTab === "leaderboard"}
-            onClick={() => setActiveTab("leaderboard")}
-          />
-          <MobileNavItem
-            href="/profile"
-            icon={<User size={24} />}
-            label="Profile"
-            isActive={activeTab === "profile"}
-            onClick={() => setActiveTab("profile")}
-          />
-        </div>
-      </div>
-    </SignedIn>
-  );
-}
-
-// --- SUBCOMPONENTS ---
-
-// Updated to support Next.js Link
-const NavItem = ({ icon, label, isActive, onClick, badge, href }) => {
-  return (
-    <Link href={href || "#"}>
-      <button
-        onClick={onClick}
-        className={`
-                flex items-center gap-4 px-4 py-3 rounded-xl w-full transition-all duration-200
-                ${
-                  isActive
-                    ? "bg-indigo-50 border-2 border-indigo-100 text-[#4854F6]"
-                    : "hover:bg-gray-100 border-2 border-transparent text-gray-500"
-                }
-                `}
-      >
-        <div className="relative">
-          {icon}
-          {badge && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md animate-pulse">
-              {badge}
-            </span>
           )}
-        </div>
-        <span className="hidden lg:block font-bold uppercase tracking-widest text-sm">
-          {label}
-        </span>
-      </button>
-    </Link>
-  );
-};
-
-const MobileNavItem = ({ icon, label, isActive, onClick, href }) => (
-  <Link href={href || "#"} className="w-full h-full">
-    <button
-      onClick={onClick}
-      className="flex flex-col items-center gap-1 w-full h-full justify-center"
-    >
-      <div className={`${isActive ? "text-[#4854F6]" : "text-gray-400"}`}>
-        {icon}
-      </div>
-    </button>
-  </Link>
-);
-
-const QuestItem = ({ title, progress, total, icon }) => (
-  <div className="flex items-center gap-3">
-    <div className="p-2 bg-gray-100 rounded-lg">{icon}</div>
-    <div className="flex-1">
-      <div className="flex justify-between mb-1">
-        <span className="font-bold text-gray-700 text-sm">{title}</span>
-        <span className="font-bold text-gray-400 text-xs">
-          {progress}/{total}
-        </span>
-      </div>
-      <div className="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
-        <motion.div
-          initial={{ width: 0 }}
-          whileInView={{ width: `${(progress / total) * 100}%` }}
-          transition={{ duration: 1 }}
-          className="bg-yellow-400 h-full rounded-full"
-        ></motion.div>
       </div>
     </div>
-  </div>
-);
-
-// Icon component helper
-const Target = ({ size, className }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="12" cy="12" r="6" />
-    <circle cx="12" cy="12" r="2" />
-  </svg>
-);
+  );
+}

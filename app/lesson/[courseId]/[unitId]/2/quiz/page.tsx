@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Zap, Check, AlertCircle } from "lucide-react";
+import { DASHBOARD_ROUTES, LESSION_ROUTES } from "@/constants/routes";
 
-export default function LessonPage({
+export default function Quiz({
   params,
 }: {
   params: { courseId: string; unitId: string; levelId: string };
@@ -49,14 +50,16 @@ export default function LessonPage({
     // If no -> Go to next level (levelId + 1).
 
     // For now, let's just go back to dashboard to show the loop works
-    router.push("/dashboard");
+    router.push(
+      LESSION_ROUTES.LESSON(courseId, unitId, (parseInt(levelId) + 1).toString())
+    );
   };
 
   return (
     <div className="flex flex-col h-screen max-w-5xl mx-auto">
       {/* --- HEADER (Progress & Lives) --- */}
       <header className="flex items-center gap-4 p-6 w-full">
-        <Link href="/dashboard">
+        <Link href={DASHBOARD_ROUTES.DASHBOARD}>
           <X
             className="text-gray-400 hover:text-gray-600 cursor-pointer"
             size={28}

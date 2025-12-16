@@ -19,17 +19,7 @@ export default function LessonLayout({
   return (
     <div className={nunito.className}>
       {/* Re-declaring your global styles here to ensure they apply in this isolated layout */}
-      <style jsx global>{`
-        .btn-press {
-          transition: all 0.1s;
-          border-bottom-width: 4px;
-        }
-        .btn-press:active {
-          transform: translateY(2px);
-          border-bottom-width: 0px;
-          margin-bottom: 4px;
-        }
-      `}</style>
+     
       <div className="min-h-screen bg-white text-gray-700">{children}</div>
     </div>
   );

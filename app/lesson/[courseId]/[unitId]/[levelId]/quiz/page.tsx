@@ -6,7 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Zap, Check, AlertCircle } from "lucide-react";
 
-export default function LessonPage({
+export default function Quiz({
   params,
 }: {
   params: { courseId: string; unitId: string; levelId: string };

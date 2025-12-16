@@ -305,7 +305,7 @@ export default function Dashboard() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {courses.map((course) => (
-                  <Link href={`/course/${course.id}`} key={course.id}>
+                  <Link href={`/lesson/${course.id}`} key={course.id}>
                     <div className="card-3d bg-white rounded-3xl border-2 border-gray-200 p-2 cursor-pointer group h-full">
                       <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-6">
@@ -350,7 +350,7 @@ export default function Dashboard() {
                                 }`}
                                 style={{ width: `${course.progress}%`, inset: "0" }}
                               >
-                                <div className="w-full h-full bg-white/20 rounded-full mt-1 ml-1"></div>
+                                <div className="w-full h-full bg-white/20 rounded-full"></div>
                               </div>
                             </div>
                           </div>
