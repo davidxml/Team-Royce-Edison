@@ -488,8 +488,17 @@ export default function Dashboard() {
 }
 
 // --- SUBCOMPONENTS ---// 
-// Updated to support Next.js Link
-const NavItem = ({ icon, label, isActive, onClick, badge, href }) => {
+interface NavItemProps {
+  icon: React.ReactNode;
+  label: string;
+  isActive: boolean;
+  onClick?: () => void;
+  badge?: string | number;
+  href?: string;
+}
+
+// Updated to support Next.js Link with TypeScript
+export const NavItem = ({ icon, label, isActive, onClick, badge, href }: NavItemProps) => {
   return (
       <Link href={href || "#"}>
           <button
@@ -519,7 +528,7 @@ const NavItem = ({ icon, label, isActive, onClick, badge, href }) => {
   );
 };
 
-const MobileNavItem = ({ icon, label, isActive, onClick, href }) => (
+const MobileNavItem = ({ icon, label, isActive, onClick, href }: NavItemProps) => (
   <Link href={href || "#"} className="w-full h-full">
       <button
   onClick={onClick}
@@ -532,7 +541,14 @@ const MobileNavItem = ({ icon, label, isActive, onClick, href }) => (
     </Link>
 );
 
-const QuestItem = ({ title, progress, total, icon }) => (
+interface QuestItemProps {
+    title: string;
+    progress: number;
+    total: number;
+    icon: React.ReactNode;
+}
+
+const QuestItem = ({ title, progress, total, icon }: QuestItemProps) => (
   <div className="flex items-center gap-3">
       <div className="p-2 bg-gray-100 rounded-lg">{icon}</div>
       <div className="flex-1">
@@ -554,7 +570,12 @@ const QuestItem = ({ title, progress, total, icon }) => (
     </div>
 );
 // Icon component helper
-const Target = ({ size, className }) => (
+interface TargetProps {
+  size: number | string;
+  className?: string;
+}
+
+const Target = ({ size, className }: TargetProps) => (
   <svg
   xmlns="http://www.w3.org/2000/svg"
       width={size}
