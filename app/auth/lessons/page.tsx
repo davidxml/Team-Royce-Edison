@@ -131,7 +131,7 @@ export default function Lessons() {
                   <span>{subject.lessons} lessons available</span>
                 </div>
 
-                <Link href={`/lessons/${subject.id}`}>
+                <Link href={`/auth/lessons/${subject.id}`}>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
