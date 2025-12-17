@@ -57,7 +57,7 @@ const page = ({
   }, [classId, courseId , user?.id]);
 
   const { data, isPending, error } = useFetcher<Topic[]>(fetchTopics, {
-    enabled: !!classId && !!courseId,
+    enabled: !!classId && !!courseId && !!user?.id,
   });
 
   if (error) {
@@ -340,7 +340,7 @@ const page = ({
                             </div>
                           ) : (
                             <Link
-                              href={`/unit/${topic.id}`}
+                              href={`/auth/session/${topic.id}`}
                               className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors font-bold text-sm"
                             >
                               <span>Start</span>
