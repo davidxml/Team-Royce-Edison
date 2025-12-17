@@ -16,10 +16,16 @@ import {
   Star,
   Check,
 } from "lucide-react";
+import Link from "next/link";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
 
 const LandingPage = () => {
   return (
-    <div className="font-sans text-gray-800 antialiased bg-white selection:bg-indigo-100 selection:text-indigo-800">
+    <>
+      <Header />
+      <div className="font-sans text-gray-800 antialiased bg-white selection:bg-indigo-100 selection:text-indigo-800">
       {/* Google Font Import (Nunito matches Duolingo's roundness) */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
@@ -125,18 +131,18 @@ const LandingPage = () => {
               </p>
 
               <div className="flex flex-col gap-4 max-w-sm mx-auto lg:mx-0">
-                <a
+                <Link
                   href="/sign-in"
-                  className="btn-primary w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-lg"
+                  className="btn-primary text-center w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-lg"
                 >
                   Get Started
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/sign-in"
-                  className="btn-outline w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-sm"
+                  className="btn-outline text-center w-full py-4 rounded-2xl font-extrabold text-lg uppercase tracking-widest shadow-sm"
                 >
                   I already have an account
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -292,6 +298,9 @@ const LandingPage = () => {
         </section>
       </main>
     </div>
+    
+    <Footer />
+    </>
   );
 };
 

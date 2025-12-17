@@ -11,7 +11,7 @@ export default function AuthLayout({
   const { profile, loading } = useProfile();
   return (
     <>
-      {!profile?.class_id && !loading && <ClassSelectionModal />}
+      {/* {!profile?.class && !loading && <ClassSelectionModal />} */}
       {children}
     </>
   );

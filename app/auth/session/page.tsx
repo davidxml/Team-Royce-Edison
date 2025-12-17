@@ -55,7 +55,7 @@ export default function Session() {
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Tutoring Session</h1>
               <p className="text-gray-600 mt-1">Mathematics - Algebra Basics</p>
             </div>
-            <Link href="/dashboard">
+            <Link href="/auth/dashboard">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
