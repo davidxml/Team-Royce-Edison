@@ -19,7 +19,7 @@ export default function LessonLayout({
   return (
     <div className={nunito.className}>
       {/* Re-declaring your global styles here to ensure they apply in this isolated layout */}
-     
+
       <div className="min-h-screen bg-white text-gray-700">{children}</div>
     </div>
   );
