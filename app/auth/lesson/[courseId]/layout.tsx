@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   description: "Focus mode learning",
 };
 
+import LeftSidebar from "@/components/LeftSidebar";
+import RightSidebar from "@/components/RightSidebar";
+import MobileBottomNav from "@/components/MobileBottomNav";
+
 export default function LessonLayout({
   children,
 }: {
@@ -20,7 +24,15 @@ export default function LessonLayout({
     <div className={nunito.className}>
       {/* Re-declaring your global styles here to ensure they apply in this isolated layout */}
      
-      <div className="min-h-screen bg-white text-gray-700">{children}</div>
+          <div className="min-h-screen bg-white text-gray-700">
+               {/* --- LEFT SIDEBAR (Navigation) --- */}
+              <LeftSidebar/>
+              <MobileBottomNav/>
+              {children}
+               {/* --- RIGHT SIDEBAR --- */}
+              <RightSidebar/>
+              
+      </div>
     </div>
   );
 }

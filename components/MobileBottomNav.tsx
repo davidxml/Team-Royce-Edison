@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dashboard-subcomponents";
 
 
-const Sidebar = () => {
+const MobileBottomNav = () => {
     const { user } = useUser();
     const [activeTab, setActiveTab] = useState("learn");
   return (
@@ -74,4 +74,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default MobileBottomNav;
