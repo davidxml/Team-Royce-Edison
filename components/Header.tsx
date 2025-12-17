@@ -1,7 +1,15 @@
 "use client";
 
+
+import { 
+  Menu, 
+  X, 
+} from 'lucide-react';
+
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import React, { useState, useEffect } from 'react';
 import {
   SignedIn,
   SignedOut,
@@ -12,72 +20,90 @@ import {
 import { Brain } from "lucide-react";
 
 export default function Header() {
+ const [isScrolled, setIsScrolled] = useState(false);
+ const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+ // Handle scroll for sticky navbar shadow
+ useEffect(() => {
+   const handleScroll = () => {
+     setIsScrolled(window.scrollY > 20);
+   };
+   window.addEventListener("scroll", handleScroll);
+   return () => window.removeEventListener("scroll", handleScroll);
+ }, []);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2"
-            >
-              <div className="w-8 h-8 bg-linear-to-br from-[#6c47ff] to-[#8b5cf6] rounded-lg flex items-center justify-center">
-                <Brain className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900">Edison</span>
-            </motion.div>
-          </Link>
-
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            <SignedIn>
-              <Link
-                href="/dashboard"
-                className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
-              >
-                Dashboard
-              </Link>
-              <Link
-                href="/lessons"
-                className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
-              >
-                Lessons
-              </Link>
-              <Link
-                href="/profile"
-                className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
-              >
-                Profile
-              </Link>
-            </SignedIn>
-          </nav>
-
-          {/* Auth Buttons */}
-          <div className="flex items-center gap-4">
-            <SignedOut>
-              <SignInButton mode="modal">
-                <button className="text-gray-600 hover:text-gray-900 transition-colors font-medium">
-                  Sign In
-                </button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer"
-                >
-                  Sign Up
-                </motion.button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </div>
+    <header
+      className={`fixed w-full top-0 z-50 bg-white transition-all duration-300 ${
+        isScrolled ? "border-b border-gray-200" : ""
+      }`}
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="flex items-center gap-1 cursor-pointer">
+          {/* Text Logo based on image */}
+          <Image src="/logo.svg" alt="Edison Logo" width={150} height={50} />
+          <div className="w-3 h-3 bg-[#4854F6] rounded-full mb-4 -ml-1"></div>{" "}
+          {/* The blue dot accent */}
         </div>
+
+        <nav className="hidden md:flex items-center gap-8 font-bold text-gray-500 uppercase text-sm tracking-wide">
+          <a
+            href="#curriculum"
+            className="hover:text-[#4854F6] transition-colors"
+          >
+            Curriculum
+          </a>
+          <a
+            href="#features"
+            className="hover:text-[#4854F6] transition-colors"
+          >
+            Features
+          </a>
+          <a href="#about" className="hover:text-[#4854F6] transition-colors">
+            About
+          </a>
+        </nav>
+
+        <div className="hidden md:flex items-center gap-4">
+          <button className="hidden lg:block font-bold text-gray-400 hover:text-gray-600 uppercase tracking-widest text-sm transition-colors">
+            I have an account
+          </button>
+          <button className="btn-primary px-6 py-2.5 rounded-2xl font-bold uppercase tracking-widest text-sm shadow-md">
+            Get Started
+          </button>
+        </div>
+
+        <button
+          className="md:hidden text-gray-500"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden absolute top-20 left-0 w-full bg-white border-b border-gray-200 p-4 flex flex-col gap-4 shadow-xl">
+          <a
+            href="#curriculum"
+            className="font-bold text-gray-500 text-center py-2"
+          >
+            Curriculum
+          </a>
+          <a
+            href="#features"
+            className="font-bold text-gray-500 text-center py-2"
+          >
+            Features
+          </a>
+          <button className="btn-primary w-full py-3 rounded-xl font-bold uppercase">
+            Get Started
+          </button>
+          <button className="btn-outline w-full py-3 rounded-xl font-bold uppercase">
+            Log In
+          </button>
+        </div>
+      )}
     </header>
   );
 }

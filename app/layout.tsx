@@ -24,7 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en"
+        style={{ scrollBehavior: "smooth" }}
+      >
         <body
           className={`${bricolage.variable} antialiased flex flex-col min-h-screen`}
         >
