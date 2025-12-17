@@ -24,6 +24,7 @@ import { vapi } from "@/lib/vapi.sdk";
 import { useUser } from "@clerk/nextjs";
 import { updateProgress } from "@/lib/updateProgress";
 
+
 export default function Session({
   params,
 }: {
