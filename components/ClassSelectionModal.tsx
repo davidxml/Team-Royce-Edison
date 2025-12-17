@@ -25,6 +25,7 @@ export default function ClassSelectionModal() {
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [classes, setClasses] = useState<ClassOption[]>([]);
+  const [isOpen, setIsOpen] = useState(true);
 
   // Keep original logic: if profile has a class, don't show modal
   if (profile?.class_id) return null;
@@ -58,52 +59,39 @@ export default function ClassSelectionModal() {
 
     await refetchProfile();
     setLoading(false);
+    setIsOpen(false); // Close modal on success
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
-        <h2 className="text-xl font-semibold mb-4 text-center">
-          Select Your Class
-        </h2>
-        <div className="flex flex-col gap-3 max-h-64 overflow-y-auto mb-4">
-          {classes &&
-            classes.map((cls) => (
-              <button
-                key={cls.id}
-                onClick={() => setSelectedClass(cls.id)}
-                className={`p-2 rounded-lg text-left border transition-colors ${
-                  selectedClass === cls.id
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-300 hover:bg-gray-100"
-                }`}
-              >
-                {cls.name}
-              </button>
-            ))}
-        </div>
-        <button
-          disabled={!selectedClass || loading}
-          onClick={handleSubmit}
-          className="btn-3d w-full bg-blue-600 text-white font-extrabold py-3.5 rounded-xl uppercase tracking-widest text-sm shadow-[0_4px_0_#d1d5db]"
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent className="sm:max-w-md">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
         >
           {/* Header */}
-          <div className="bg-gray-50 border-b-2 border-gray-100 p-6 flex items-center gap-3">
-            <div className="w-12 h-12 bg-[#4854F6] rounded-full flex items-center justify-center text-white shadow-[0_4px_0_#353EB5]">
-              <GraduationCap size={24} />
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-[#4854F6] rounded-full flex items-center justify-center text-white shadow-[0_4px_0_#353EB5]">
+                <GraduationCap size={24} />
+              </div>
+              <div>
+                <DialogTitle className="text-xl font-black text-gray-700">
+                  Join a Class
+                </DialogTitle>
+                <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">
+                  Select your current level to continue
+                </p>
+                <p className="text-red-500 text-xs mt-1">
+                  * Required to access the platform
+                </p>
+              </div>
             </div>
-            <div>
-              <DialogTitle className="text-xl font-black text-gray-700">
-                Join a Class
-              </DialogTitle>
-              <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">
-                Select your current level to continue
-              </p>
-            </div>
-          </div>
+          </DialogHeader>
 
           {/* Body */}
-          <div className="p-6 max-h-[400px] overflow-y-auto space-y-3">
+          <div className="max-h-[400px] overflow-y-auto space-y-3 py-4">
             {classes.map((cls) => {
               const isSelected = selectedClass === cls.id;
               return (
@@ -145,7 +133,7 @@ export default function ClassSelectionModal() {
           </div>
 
           {/* Footer */}
-          <DialogFooter className="p-6 bg-gray-50 border-t-2 border-gray-100">
+          <DialogFooter>
             <button
               onClick={handleSubmit}
               disabled={!selectedClass || loading}
