@@ -81,7 +81,7 @@ export default function ClassSelectionModal() {
         <button
           disabled={!selectedClass || loading}
           onClick={handleSubmit}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg disabled:opacity-50"
+          className="btn-3d w-full bg-blue-600 text-white font-extrabold py-3.5 rounded-xl uppercase tracking-widest text-sm shadow-[0_4px_0_#d1d5db]"
         >
           {loading ? "Saving..." : "Confirm Class"}
         </button>

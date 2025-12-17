@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { SignedIn, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Nunito } from "next/font/google";
@@ -18,6 +18,13 @@ import {
   Gift,
 } from "lucide-react";
 import { AddCourseModal } from "@/components/modals/add-course-modal";
+import { supabase } from "@/lib/supabase";
+import { useProfile } from "@/hook/useProfile";
+import { useFetcher } from "@/hook/useFetcher";
+import { ClassSubjectResponse } from "@/types/classSubjects";
+import { ThemeColor } from "@/types/theme";
+import { redirect } from "next/navigation";
+import { colors, getBgColor, getColorClass } from "@/lib/colors";
 
 // Optimize Font Loading
 const nunito = Nunito({
@@ -26,9 +33,6 @@ const nunito = Nunito({
 });
 
 // --- TYPE DEFINITIONS (Fixes the TS Issues) ---
-
-// 1. Define exactly which color keys are allowed
-type ThemeColor = "blue" | "green" | "red" | "yellow" | "purple" | "orange";
 
 // 2. Define the structure of a Course
 interface Course {
@@ -53,6 +57,7 @@ interface Recommendation {
 
 export default function Dashboard() {
   const { user } = useUser();
+  const { profile, loading: profileLoading } = useProfile();
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
 
   // Mock User Data
@@ -62,17 +67,6 @@ export default function Dashboard() {
     league: "Sapphire",
     leagueRank: 4,
     avatar: user?.firstName?.charAt(0) || "S",
-  };
-
-  // Gamified Color Palette Map
-  // We type this as a Record so TS knows every key is a ThemeColor and every value is a string
-  const colors: Record<ThemeColor, string> = {
-    blue: "bg-[#1CB0F6] border-[#1899D6]",
-    green: "bg-[#58CC02] border-[#46A302]",
-    red: "bg-[#FF4B4B] border-[#EA2B2B]",
-    yellow: "bg-[#FFC800] border-[#E5B400]",
-    purple: "bg-[#CE82FF] border-[#A568CC]",
-    orange: "bg-[#FF9600] border-[#CC7800]",
   };
 
   // Mock Enrolled Courses (Typed)
@@ -114,6 +108,70 @@ export default function Dashboard() {
       nextLesson: "National Values",
     },
   ];
+  const fetchSubjects: () => Promise<ClassSubjectResponse> =
+    useCallback(async () => {
+      const { data, error } = await supabase
+        .from("class_subjects")
+        .select(
+          `
+        id,
+        class:class_id (
+          id,
+          name,
+          order_no
+        ),
+        subject:subject_id (
+          id,
+          name,
+          category,
+          description,
+          image,
+          theme,
+          created_at
+        )
+      `
+        )
+        .eq("class_id", profile?.class_id);
+
+      if (error) {
+        throw error;
+      }
+      return data as unknown as ClassSubjectResponse;
+    }, [profile?.class_id]);
+
+  const { data, isPending, error } = useFetcher<ClassSubjectResponse>(
+    fetchSubjects,
+    {
+      enabled: !!profile?.class_id,
+    }
+  );
+
+  // Error handling
+  if (error) {
+    return (
+      <SignedIn>
+        <div
+          className={`min-h-screen bg-gray-50 text-gray-700 ${nunito.className} flex items-center justify-center`}
+        >
+          <div className="text-center max-w-md mx-auto px-4">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <BookOpen size={32} className="text-red-500" />
+            </div>
+            <h2 className="text-2xl font-black text-gray-700 mb-2">
+              Oops! Something went wrong
+            </h2>
+            <p className="text-gray-500 mb-6">{error.message}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-3 bg-[#4854F6] text-white font-bold rounded-xl hover:bg-[#3a45d1] transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </SignedIn>
+    );
+  }
 
   // AI Recommendations (Typed)
   const aiRecommendations: Recommendation[] = [
@@ -206,10 +264,7 @@ export default function Dashboard() {
             {/* User Profile - Clerk Integration */}
             <div className="flex items-center gap-4 pl-4 border-l border-gray-200">
               <div className="relative cursor-pointer hover:scale-110 transition-transform">
-                <Bell
-                  size={28}
-                  className="text-gray-400 hover:text-gray-600"
-                />
+                <Bell size={28} className="text-gray-400 hover:text-gray-600" />
                 <span className="absolute top-0 right-0 w-3 h-3 bg-[#FF4B4B] rounded-full border-2 border-white"></span>
               </div>
 
@@ -284,10 +339,8 @@ export default function Dashboard() {
             {/* Recent Courses */}
             <section>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-black text-gray-700">
-                  Recent Courses
-                </h2>
-                <div className="flex items-center gap-2">
+                <h2 className="text-2xl font-black text-gray-700">Subjects </h2>
+                {/* <div className="flex items-center gap-2">
                   <Link
                     href="/auth/courses"
                     className="text-gray-400 hover:text-gray-600 font-extrabold text-sm uppercase tracking-wider px-4 py-2 transition-colors"
@@ -300,65 +353,102 @@ export default function Dashboard() {
                   >
                     + Add Course
                   </button>
-                </div>
+                </div> */}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {courses.map((course) => (
-                  <Link href={`/auth/lesson/${course.id}`} key={course.id}>
-                    <div className="card-3d bg-white rounded-3xl border-2 border-gray-200 p-2 cursor-pointer group h-full">
+                {profileLoading || isPending ? (
+                  // Loading skeletons
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="card-3d bg-white rounded-3xl border-2 border-gray-200 p-2 h-full animate-pulse"
+                    >
+                      <div className="p-4 flex flex-col h-full">
+                        <div className="flex items-start justify-between mb-6">
+                          <div className="w-20 h-20 bg-gray-200 rounded-2xl"></div>
+                          <div className="h-6 bg-gray-200 rounded-xl w-16"></div>
+                        </div>
+                        <div className="mt-auto space-y-3">
+                          <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                          <div className="h-4 bg-gray-200 rounded w-full"></div>
+                          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                          <div className="h-10 bg-gray-200 rounded-xl w-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : data && data.length > 0 ? (
+                  data.map((course) => (
+                    <div
+                      key={course.id}
+                      className="card-3d bg-white rounded-3xl border-2 border-gray-200 p-2 cursor-pointer group h-full"
+                    >
                       <div className="p-4 flex flex-col h-full">
                         <div className="flex items-start justify-between mb-6">
                           {/* Giant Icon */}
                           <div
-                            className={`w-20 h-20 rounded-2xl flex items-center justify-center shadow-md transform group-hover:scale-105 transition-transform duration-300 ${
-                              colors[course.theme]
-                            }`}
+                            className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-md transform group-hover:scale-105 transition-transform duration-300"
+                            style={{
+                              backgroundColor: getBgColor(course.subject.theme),
+                            }}
                           >
-                            {course.icon}
+                            <BookOpen size={40} color="white" />
                           </div>
 
                           {/* Level Badge */}
                           <div className="bg-gray-100 border-2 border-gray-200 text-gray-400 text-xs font-black px-3 py-1.5 rounded-xl uppercase">
-                            {course.level}
+                            {course.class.name}
                           </div>
                         </div>
 
-                        <div className="mt-auto">
-                          <h3 className="font-black text-xl text-gray-700 mb-1 group-hover:text-[#4854F6] transition-colors">
-                            {course.title}
+                        <div className="mt-auto space-y-3">
+                          <h3 className="font-black text-xl text-gray-700 group-hover:text-[#4854F6] transition-colors">
+                            {course.subject.name}
                           </h3>
 
-                          {/* Bubbly Progress Bar */}
-                          <div className="relative pt-4">
-                            <div className="flex justify-between text-xs font-bold text-gray-400 mb-2">
-                              <span>{course.nextLesson}</span>
-                              <span
-                                className={`${
-                                  course.theme === "blue"
-                                    ? "text-[#4854F6]"
-                                    : "text-gray-400"
-                                }`}
-                              >
-                                {course.progress}%
-                              </span>
-                            </div>
-                            <div className="w-full bg-gray-100 h-4 rounded-full overflow-hidden border border-gray-200">
-                              <div
-                                className={`h-full rounded-full ${
-                                  colors[course.theme].split(" ")[0]
-                                }`}
-                                style={{ width: `${course.progress}%`, inset: "0" }}
-                              >
-                                <div className="w-full h-full bg-white/20 rounded-full"></div>
-                              </div>
-                            </div>
-                          </div>
+                          <p className="text-sm text-gray-500">
+                            {course.subject.description}
+                          </p>
+                          {/* //TODO: add progress bar */}
+
+                          <button
+                            className={`btn-3d w-full py-3 rounded-xl font-extrabold uppercase tracking-widest text-sm text-white shadow-sm ${getColorClass(
+                              course.subject.theme as ThemeColor
+                            )}`}
+                            onClick={() =>
+                              redirect(
+                                `/auth/lesson/${course.subject.id}/${course.class.id}`
+                              )
+                            }
+                          >
+                            Continue Learning
+                          </button>
                         </div>
                       </div>
                     </div>
-                  </Link>
-                ))}
+                  ))
+                ) : (
+                  // Empty state
+                  <div className="col-span-full text-center py-12">
+                    <BookOpen
+                      size={48}
+                      className="text-gray-300 mx-auto mb-4"
+                    />
+                    <h3 className="text-xl font-bold text-gray-500 mb-2">
+                      No Courses Available
+                    </h3>
+                    <p className="text-gray-400 mb-6">
+                      You don't have any courses assigned to your class yet.
+                    </p>
+                    <button
+                      onClick={() => setIsAddCourseModalOpen(true)}
+                      className="px-6 py-3 bg-[#4854F6] text-white font-bold rounded-xl hover:bg-[#3a45d1] transition-colors"
+                    >
+                      Add Course
+                    </button>
+                  </div>
+                )}
               </div>
             </section>
 
@@ -428,11 +518,7 @@ export default function Dashboard() {
                 <h3 className="font-black text-xl text-gray-700">
                   Daily Quests
                 </h3>
-                <Clock
-                  size={20}
-                  className="text-[#4854F6]"
-                  strokeWidth={2.5}
-                />
+                <Clock size={20} className="text-[#4854F6]" strokeWidth={2.5} />
               </div>
 
               <div className="space-y-6">
@@ -488,10 +574,7 @@ export default function Dashboard() {
                       Top 10 Advance
                     </p>
                   </div>
-                  <ChevronRight
-                    className="text-gray-300"
-                    strokeWidth={3}
-                  />
+                  <ChevronRight className="text-gray-300" strokeWidth={3} />
                 </div>
               </Link>
 

@@ -135,7 +135,7 @@ export function AddCourseModal({ isOpen, onClose }: AddCourseModalProps) {
         }
       `}</style>
 
-      <DialogContent className="sm:max-w-[600px] bg-white rounded-3xl border-0 shadow-2xl p-0 overflow-hidden font-sans">
+      <DialogContent className="sm:max-w-150 bg-white rounded-3xl border-0 shadow-2xl p-0 overflow-hidden font-sans">
         {/* Animated Wrapper for the entire modal content */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
