@@ -17,7 +17,7 @@ export default function ClassSelectionModal() {
   const [loading, setLoading] = useState(false);
   const [classes, setClasses] = useState<ClassOption[]>([]);
 
-  if (profile?.class) return null;
+  if (profile?.class_id) return null;
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -43,7 +43,7 @@ export default function ClassSelectionModal() {
 
     const { error } = await supabase
       .from("profiles")
-      .update({ class: selectedClass })
+      .update({ class_id: selectedClass })
       .eq("clerk_id", user.id);
 
     if (error) {
@@ -67,9 +67,9 @@ export default function ClassSelectionModal() {
             classes.map((cls) => (
               <button
                 key={cls.id}
-                onClick={() => setSelectedClass(cls.name)}
+                onClick={() => setSelectedClass(cls.id)}
                 className={`p-2 rounded-lg text-left border transition-colors ${
-                  selectedClass === cls.name
+                  selectedClass === cls.id
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-300 hover:bg-gray-100"
                 }`}
