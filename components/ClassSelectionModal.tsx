@@ -61,33 +61,31 @@ export default function ClassSelectionModal() {
   };
 
   return (
-    <Dialog open={true}>
-      <style jsx global>{`
-        .btn-pressable {
-          transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: translateY(0);
-          border-bottom-width: 4px;
-        }
-        .btn-pressable:active {
-          transform: translateY(2px);
-          border-bottom-width: 2px !important;
-          margin-top: 2px;
-          margin-bottom: -2px;
-          filter: brightness(0.95);
-        }
-      `}</style>
-
-      <DialogContent
-        className="sm:max-w-[500px] bg-white rounded-3xl border-0 shadow-2xl p-0 overflow-hidden font-sans"
-        // Prevent clicking outside or hitting escape to close if class is mandatory
-        onPointerDownOutside={(e) => e.preventDefault()}
-        onEscapeKeyDown={(e) => e.preventDefault()}
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className="flex flex-col h-full"
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Select Your Class
+        </h2>
+        <div className="flex flex-col gap-3 max-h-64 overflow-y-auto mb-4">
+          {classes &&
+            classes.map((cls) => (
+              <button
+                key={cls.id}
+                onClick={() => setSelectedClass(cls.id)}
+                className={`p-2 rounded-lg text-left border transition-colors ${
+                  selectedClass === cls.id
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-300 hover:bg-gray-100"
+                }`}
+              >
+                {cls.name}
+              </button>
+            ))}
+        </div>
+        <button
+          disabled={!selectedClass || loading}
+          onClick={handleSubmit}
+          className="btn-3d w-full bg-blue-600 text-white font-extrabold py-3.5 rounded-xl uppercase tracking-widest text-sm shadow-[0_4px_0_#d1d5db]"
         >
           {/* Header */}
           <div className="bg-gray-50 border-b-2 border-gray-100 p-6 flex items-center gap-3">
