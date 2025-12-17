@@ -24,6 +24,7 @@ import { useFetcher } from "@/hook/useFetcher";
 import { Topic } from "@/types/topics";
 import { ThemeColor } from "@/types/theme";
 import { getBgColor, getColorClass } from "@/lib/colors";
+import { redirect } from "next/navigation";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -118,7 +119,7 @@ const page = ({
           animate={{ opacity: 1, y: 0 }}
           className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm w-full pt-6 pb-4 border-b border-gray-100 mb-6"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between" onClick={()=>redirect('/auth/dashboard')}>
             <div className="flex items-center gap-2 hover:bg-gray-100 p-2 -ml-2 rounded-xl cursor-pointer transition-colors group">
               <div className="w-10 h-8 rounded-lg border-2 border-gray-300 group-hover:border-gray-400 flex items-center justify-center bg-white">
                 <img
