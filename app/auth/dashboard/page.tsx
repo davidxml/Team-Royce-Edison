@@ -32,8 +32,6 @@ const nunito = Nunito({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-// --- TYPE DEFINITIONS (Fixes the TS Issues) ---
-
 // 2. Define the structure of a Course
 interface Course {
   id: number;
@@ -69,45 +67,6 @@ export default function Dashboard() {
     avatar: user?.firstName?.charAt(0) || "S",
   };
 
-  // Mock Enrolled Courses (Typed)
-  const courses: Course[] = [
-    {
-      id: 1,
-      title: "Mathematics",
-      level: "JSS 1",
-      progress: 65,
-      theme: "blue",
-      icon: <Brain size={40} strokeWidth={2.5} className="text-white" />,
-      nextLesson: "Algebraic Simplification",
-    },
-    {
-      id: 2,
-      title: "English Language",
-      level: "JSS 1",
-      progress: 40,
-      theme: "red",
-      icon: <BookOpen size={40} strokeWidth={2.5} className="text-white" />,
-      nextLesson: "Oral: Vowel Sounds /ae/",
-    },
-    {
-      id: 3,
-      title: "Basic Science",
-      level: "JSS 1",
-      progress: 25,
-      theme: "green",
-      icon: <Zap size={40} strokeWidth={2.5} className="text-white" />,
-      nextLesson: "Living & Non-Living Things",
-    },
-    {
-      id: 4,
-      title: "Civic Education",
-      level: "JSS 1",
-      progress: 80,
-      theme: "orange",
-      icon: <Star size={40} strokeWidth={2.5} className="text-white" />,
-      nextLesson: "National Values",
-    },
-  ];
   const fetchSubjects: () => Promise<ClassSubjectResponse> =
     useCallback(async () => {
       const { data, error } = await supabase
@@ -294,6 +253,13 @@ export default function Dashboard() {
                     Let's keep that brain active.
                   </p>
                 </div>
+
+                <button
+                  className="btn-3d bg-[#4854F6] text-white font-extrabold py-3.5 px-6 rounded-xl uppercase tracking-widest text-sm shadow-[0_4px_0_#3a45d1]"
+                  onClick={()=> redirect('/auth/profile')}
+                >
+                  Open Profile
+                </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
