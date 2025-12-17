@@ -1,0 +1,1 @@
+export type ThemeColor = "blue" | "green" | "red" | "yellow" | "purple" | "orange";

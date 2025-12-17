@@ -70,7 +70,7 @@ export default function LessonDetail({
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Link href="/lessons">
+          <Link href="/auth/lessons">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
