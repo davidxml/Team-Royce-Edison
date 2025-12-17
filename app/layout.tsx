@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -10,8 +12,9 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "Edison",
-  description: "AI-Powered LMS",
+  title: "Edison — AI Tutoring for Nigerian Students",
+  description:
+    "Edison delivers affordable, AI-driven one-on-one tutoring aligned to Nigerian curricula — personalized learning, low-bandwidth support, and teacher tools.",
 };
 
 export default function RootLayout({
@@ -20,13 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${bricolage.variable} antialiased`}>
-        <ClerkProvider appearance={{ variables: { colorPrimary: '#fe5933' }} }>
-          <Navbar />
-          {children}
-        </ClerkProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={`${bricolage.variable} antialiased flex flex-col min-h-screen`}
+        >
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
