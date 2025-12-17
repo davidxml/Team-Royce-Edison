@@ -167,10 +167,10 @@ export default function Dashboard() {
           .btn-3d {
             transition: all 0.1s;
             transform: translateY(0);
-            border-bottom-width: 4px;
+            border-bottom-width: 5px !important;
           }
           .btn-3d:active {
-            transform: translateY(4px);
+            transform: translateY(1px);
             border-bottom-width: 0px !important;
             margin-top: 4px;
           }
@@ -255,8 +255,8 @@ export default function Dashboard() {
                 </div>
 
                 <button
-                  className="btn-3d bg-[#4854F6] text-white font-extrabold py-3.5 px-6 rounded-xl uppercase tracking-widest text-sm shadow-[0_4px_0_#3a45d1]"
-                  onClick={()=> redirect('/auth/profile')}
+                  className="btn-3d bg-[#4854F6]  text-white font-extrabold py-3.5 px-6 rounded-xl uppercase tracking-widest text-sm  border-b-[#3a45d1]"
+                  onClick={() => redirect("/auth/profile")}
                 >
                   Open Profile
                 </button>
@@ -534,7 +534,7 @@ export default function Dashboard() {
                   </div>
                   <div className="flex-1">
                     <p className="font-extrabold text-gray-800 text-lg">
-                      Sapphire League
+                      Sage League
                     </p>
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-wide">
                       Top 10 Advance
@@ -587,7 +587,7 @@ export default function Dashboard() {
                 <p className="text-sm text-gray-300 mb-6 font-medium leading-relaxed">
                   No ads, unlimited hearts, and personalized mistake review.
                 </p>
-                <button className="btn-3d w-full bg-white text-[#4854F6] font-extrabold py-3.5 rounded-xl uppercase tracking-widest text-sm shadow-[0_4px_0_#d1d5db]">
+                <button className="btn-3d w-full bg-white text-[#4854F6] font-extrabold py-3.5 rounded-xl uppercase tracking-widest text-sm">
                   Try 2 Weeks Free
                 </button>
               </div>
