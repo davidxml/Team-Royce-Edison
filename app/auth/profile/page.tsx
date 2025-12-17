@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { SignedIn } from "@clerk/nextjs";
-import { Award, Target, TrendingUp, Clock, BookOpen, Settings } from "lucide-react";
+import { Award, Target, TrendingUp, Clock, BookOpen } from "lucide-react";
 
 const achievements = [
   { id: 1, name: "First Steps", description: "Complete your first lesson", icon: "🎯", unlocked: true },
@@ -22,7 +21,6 @@ const stats = [
 
 export default function Profile() {
   return (
-    <SignedIn>
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
@@ -172,7 +170,6 @@ export default function Profile() {
           </motion.div>
         </div>
       </div>
-    </SignedIn>
   );
 }
 
