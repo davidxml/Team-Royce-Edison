@@ -53,7 +53,7 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <SignedOut>
-                <Link href="/sign-up">
+                <Link href="/sign-in">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -185,7 +185,7 @@ export default function Home() {
               AI tutoring.
             </p>
             <SignedOut>
-              <Link href="/sign-up">
+              <Link href="/sign-in">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
