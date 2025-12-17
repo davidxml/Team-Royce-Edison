@@ -85,7 +85,7 @@ export default function Session() {
                   className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   {message.role === "assistant" && (
-                    <div className="w-8 h-8 bg-[#6c47ff] rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-[#6c47ff] rounded-full flex items-center justify-center shrink-0">
                       <Bot className="w-5 h-5 text-white" />
                     </div>
                   )}
@@ -104,7 +104,7 @@ export default function Session() {
                     </p>
                   </div>
                   {message.role === "user" && (
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center shrink-0">
                       <User className="w-5 h-5 text-gray-600" />
                     </div>
                   )}

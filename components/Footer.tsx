@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Brain } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-linear-to-br from-[#6c47ff] to-[#8b5cf6] rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
+                <Brain className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-white">Edison</span>
             </Link>
