@@ -37,6 +37,7 @@ export default function Quiz({
     if (selectedOption === questionData.correctAnswerId) {
       setStatus("correct");
       // Play specific success sound here
+      // for later mamybe 
     } else {
       setStatus("wrong");
       // Play error sound here
