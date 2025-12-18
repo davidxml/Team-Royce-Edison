@@ -109,3 +109,4 @@ export const Target = ({ size, className }: TargetProps) => (
       <circle cx="12" cy="12" r="2" />
     </svg>
 );
+
