@@ -9,6 +9,7 @@ export const colors: Record<ThemeColor, string> = {
   orange: "bg-[#FF9600] border-[#CC7800]",
 };
 
+
 // Helper function to get color class safely
 export const getColorClass = (theme: ThemeColor | null): string => {
   return colors[theme || "blue"];
